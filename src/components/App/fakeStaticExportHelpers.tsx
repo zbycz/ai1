@@ -69,20 +69,11 @@ export const fakeStaticExportCookies = (cookies: Record<string, string>) => {
   };
 };
 
-export const fakeStaticExportMapView = (initialMapView: View): View => {
-  if (!process.env.NEXT_PUBLIC_FAKE_STATIC_EXPORT || isServer()) {
-    return initialMapView;
-  }
-
-  const viewCookie = Cookies.get('mapView');
-  if (viewCookie) {
-    return viewCookie.split('/') as View;
-  }
-
-  return initialMapView;
-};
-
-const initialViewCookie = isBrowser() && Cookies.get('mapView');
+// Captured at module load time (app startup) so we can detect when the map is
+// still showing the initially-restored view on a feature page (and skip persisting it
+// until the map has actually moved to the feature's location).
+const initialStoredView =
+  isBrowser() && window.localStorage.getItem('mapView');
 
 // we don't want to accidentally persist default view, when feature is loading
 export const fakeStaticExportSkipDefaultMapView = (view: View): boolean => {
@@ -98,9 +89,9 @@ export const fakeStaticExportSkipDefaultMapView = (view: View): boolean => {
       return true;
     }
 
-    if (initialViewCookie) {
-      const cookieView = initialViewCookie.split('/');
-      if (isEqual(cookieView, view)) {
+    if (initialStoredView) {
+      const storedView = initialStoredView.split('/');
+      if (isEqual(storedView, view)) {
         return true;
       }
     }

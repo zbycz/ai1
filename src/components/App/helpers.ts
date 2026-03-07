@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/nextjs';
-import nextCookies from 'next-cookies';
 import Cookies from 'js-cookie';
 import { clearFeatureCache, fetchFeature } from '../../services/osm/osmApi';
 import { fetchJson } from '../../services/fetch';
@@ -18,11 +17,12 @@ type IpApiResponse = {
   lon: number;
 };
 
-const getViewFromIp = async (ip: string): Promise<View> => {
+// Called client-side only – no IP argument needed, the API auto-detects it.
+// Uses HTTPS so it works from browser pages served over HTTPS.
+// 45 requests per minute per IP https://ip-api.com/docs/api:json
+export const getViewFromClientIp = async (): Promise<View | null> => {
   try {
-    // TODO Currently we dont do rate limiting on our side #83
-    // 45 requests per minute from an IP address https://ip-api.com/docs/api:json
-    const url = `http://ip-api.com/json/${ip}?fields=status,lat,lon`;
+    const url = `https://ip-api.com/json?fields=status,lat,lon`;
     const { status, lat, lon } = await fetchJson<IpApiResponse>(url);
 
     if (status === 'success') {
@@ -32,37 +32,9 @@ const getViewFromIp = async (ip: string): Promise<View> => {
     return null;
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.warn('getViewFromIp', e.message ?? e);
+    console.warn('getViewFromClientIp', e.message ?? e);
     return null;
   }
-};
-
-const isLocalhostOrNgnix = (ip: string) => ['127.0.0.1', '::1'].includes(ip);
-
-export const getIp = (req: NextPageContext['req']) => {
-  const remoteIp = req.socket.remoteAddress;
-  const fwdIp = ((req.headers['x-forwarded-for'] as string) || '') // ngnix: proxy_set_header X-Forwarded-For $remote_addr;
-    .split(',')[0]
-    .trim();
-  return isLocalhostOrNgnix(remoteIp) ? fwdIp : remoteIp;
-};
-
-export const getViewFromRequest = async (
-  req: NextPageContext['req'],
-): Promise<View> => {
-  const ip = getIp(req);
-  const view = ip ? await getViewFromIp(ip) : null;
-  return view ?? DEFAULT_VIEW;
-};
-
-export const getInitialMapView = async (
-  ctx: NextPageContext,
-): Promise<View> => {
-  const cookies = nextCookies(ctx);
-  const viewCookie = cookies.mapView;
-  return viewCookie
-    ? (viewCookie.split('/') as View)
-    : getViewFromRequest(ctx.req);
 };
 
 const saveLastUrl = (feature: Feature, ctx?: NextPageContext) => {
