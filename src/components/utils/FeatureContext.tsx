@@ -12,6 +12,7 @@ import { useBoolState } from '../helpers';
 import { publishDbgObject } from '../../utils';
 import { setLastFeature } from '../../services/lastFeatureStorage';
 import { Setter } from '../../types';
+import { useLoadFeatureCenter } from '../../services/osm/useLoadFeatureCenter';
 
 export type FeatureContextType = {
   feature: Feature | null;
@@ -50,6 +51,8 @@ export const FeatureProvider = ({
     publishDbgObject('feature', featureFromRouter);
     publishDbgObject('schema', featureFromRouter?.schema);
   }, [featureFromRouter]);
+
+  useLoadFeatureCenter(feature, setFeature);
 
   const router = useRouter();
   const isIndex = router.pathname === '/';

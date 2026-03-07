@@ -60,7 +60,7 @@ export const WAY = {
 };
 export const WAY_FEATURE = {
   type: 'Feature',
-  center: [14, 50],
+  center: undefined,
   osmMeta: {
     changeset: 104162807,
     id: 51050330,
@@ -72,11 +72,7 @@ export const WAY_FEATURE = {
   },
   properties: { class: 'school', subclass: 'school' },
   tags: { amenity: 'school' },
-  imageDefs: [
-    { type: 'center', service: 'panoramax', center: [14, 50] },
-    { type: 'center', service: 'kartaview', center: [14, 50] },
-    { type: 'center', service: 'mapillary', center: [14, 50] },
-  ],
+  imageDefs: [],
 };
 export const RELATION = {
   elements: [
@@ -110,7 +106,7 @@ export const RELATION = {
 
 export const RELATION_FEATURE = {
   type: 'Feature',
-  center: [15, 51],
+  center: undefined,
   members: [
     {
       ref: 8166328,

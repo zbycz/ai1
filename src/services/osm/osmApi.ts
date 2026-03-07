@@ -58,20 +58,10 @@ const getOsmPromise = async (apiId: OsmId) => {
   }
 };
 
-const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
+const getCenterFromCache = (apiId: OsmId): LonLat | false => {
   if (apiId.type === 'node') return false;
-
-  if (isBrowser() && featureCenterCache[getShortId(apiId)]) {
-    return featureCenterCache[getShortId(apiId)]; // just use the coordinate where user clicked
-  }
-
-  try {
-    return await fetchOverpassCenter(apiId);
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('getCenterPromise()', e); // eg. 529 too many requests
-    return false;
-  }
+  if (!isBrowser()) return false;
+  return featureCenterCache[getShortId(apiId)] || false;
 };
 
 export const clearFeatureCache = (apiId) => {
@@ -79,47 +69,42 @@ export const clearFeatureCache = (apiId) => {
   removeFetchCache(getOsmHistoryUrl(apiId));
 };
 
-const getRelationElementsAndCenter = async (apiId: OsmId) => {
-  const element = await getOsmPromise(apiId);
-  const getPositionOfFirstItem =
-    isPublictransportRoute({ tags: element.tags }) ||
-    isRouteMaster({
-      tags: element.tags,
-      osmMeta: apiId,
-    });
-  const center = getPositionOfFirstItem
-    ? await fetchOverpassCenter({
-        id: element.members[0].ref,
-        type: element.members[0].type,
-      })
-    : await fetchOverpassCenter(apiId);
+/**
+ * Fetches the geographic center of a feature from Overpass, for lazy loading in the browser.
+ * For nodes center is available from the OSM element (lat/lon), so this returns false.
+ * For public transport routes, fetches center from the first member stop/platform.
+ */
+export const fetchOverpassCenterForFeature = async (
+  feature: Feature,
+): Promise<LonLat | false> => {
+  const { osmMeta, tags, members } = feature;
 
-  return { element, center };
+  if (osmMeta.type === 'node') {
+    return false;
+  }
+
+  if (
+    isPublictransportRoute({ tags }) ||
+    isRouteMaster({ tags, osmMeta })
+  ) {
+    const firstMember = members?.[0];
+    if (firstMember) {
+      return fetchOverpassCenter({
+        id: firstMember.ref,
+        type: firstMember.type,
+      });
+    }
+  }
+
+  return fetchOverpassCenter(osmMeta);
 };
 
 const getElementsAndCenter = async (apiId: OsmId) => {
-  const cachedCenter = featureCenterCache[getShortId(apiId)];
-  if (isBrowser() && cachedCenter) {
-    return {
-      center: cachedCenter,
-      element: await getOsmPromise(apiId),
-    };
-  }
-  switch (apiId.type) {
-    case 'node':
-      return {
-        element: await getOsmPromise(apiId),
-        center: false as const,
-      };
-    case 'way':
-      const [elementWay, center] = await Promise.all([
-        getOsmPromise(apiId),
-        getCenterPromise(apiId),
-      ]);
-      return { element: elementWay, center };
-    case 'relation':
-      return getRelationElementsAndCenter(apiId);
-  }
+  const element = await getOsmPromise(apiId);
+  // For nodes, center is derived from lat/lon in osmToFeature().
+  // For ways/relations, we use the featureCenterCache (populated on map click) if available.
+  const center = getCenterFromCache(apiId);
+  return { element, center };
 };
 
 const fetchFeatureWithCenter = async (apiId: OsmId) => {
@@ -166,12 +151,6 @@ const addMemberFeaturesToArea = async (relation: Feature) => {
   );
 
   // TODO merge this with osmToFeature()
-  if (relation.center) {
-    const countryCode = await getCountryCode(relation);
-    if (countryCode) {
-      relation.countryCode = countryCode;
-    }
-  }
 
   return { ...relation, memberFeatures };
 };
@@ -213,7 +192,7 @@ const addMembersAndParents = async (feature: Feature): Promise<Feature> => {
 
     return {
       ...featureWithMemberFeatures,
-      center: feature.center, // feature contains correct center from centerCache or overpass
+      center: feature.center, // feature may have center from featureCenterCache (map click)
       parentFeatures,
     };
   }
