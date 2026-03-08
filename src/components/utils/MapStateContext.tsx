@@ -13,7 +13,11 @@ import { useBoolState } from '../helpers';
 import { Setter } from '../../types';
 import { LonLat } from '../../services/types';
 import Router from 'next/router';
-import { DEFAULT_VIEW, getMapViewFromHash, getViewFromClientIp } from '../App/helpers';
+import {
+  DEFAULT_VIEW,
+  getMapViewFromHash,
+  getViewFromClientIp,
+} from '../App/helpers';
 import { osmappLayers } from '../LayerSwitcher/osmappLayers';
 import { fakeStaticExportSkipDefaultMapView } from '../App/fakeStaticExportHelpers';
 import { isEqual } from 'lodash';
@@ -107,7 +111,10 @@ const useRestoreMapView = (
     const stored = localStorage.getItem('mapView');
     if (stored) {
       const parts = stored.split('/');
-      if (parts.length === 3 && parts.every((p) => !Number.isNaN(parseFloat(p)))) {
+      if (
+        parts.length === 3 &&
+        parts.every((p) => !Number.isNaN(parseFloat(p)))
+      ) {
         setBothViews(parts as View);
         return;
       }
@@ -120,10 +127,9 @@ const useRestoreMapView = (
   }, [initialMapView, setBothViews]); // eslint-disable-line react-hooks/exhaustive-deps -- runs once on mount; both values are stable
 };
 
-export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
-  children,
-  initialMapView,
-}) => {
+export const MapStateProvider: React.FC = ({ children }) => {
+  const initialMapView = getMapViewFromHash() || DEFAULT_VIEW;
+
   const [activeLayers, setActiveLayers] = useActiveLayersState();
   const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);

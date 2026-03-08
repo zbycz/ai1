@@ -19,11 +19,7 @@ import { OsmAuthProvider } from '../src/components/utils/OsmAuthContext';
 import { EditDialogProvider } from '../src/components/FeaturePanel/helpers/EditDialogContext';
 import Map from '../src/components/Map/Map';
 import { TitleAndMetaTags } from '../src/helpers/TitleAndMetaTags';
-import {
-  DEFAULT_VIEW,
-  getInitialFeature,
-  getMapViewFromHash,
-} from '../src/components/App/helpers';
+import { getInitialFeature } from '../src/components/App/helpers';
 import { FeatureProvider } from '../src/components/utils/FeatureContext';
 import { StarsProvider } from '../src/components/utils/StarsContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -71,7 +67,6 @@ const MyApp = (props: Props) => {
     userThemeCookie,
     featureFromRouter,
   } = props;
-  const mapView = getMapViewFromHash() || DEFAULT_VIEW;
   const initialToast = getInitialToast(featureFromRouter);
 
   useEffect(() => {
@@ -98,7 +93,7 @@ const MyApp = (props: Props) => {
                 }
                 cookies={cookies}
               >
-                <MapStateProvider initialMapView={mapView}>
+                <MapStateProvider>
                   <OsmAuthProvider cookies={cookies}>
                     <StarsProvider>
                       <EditDialogProvider /* TODO supply router.query */>
