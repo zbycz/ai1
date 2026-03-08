@@ -19,7 +19,6 @@ import {
   getViewFromClientIp,
 } from '../App/helpers';
 import { osmappLayers } from '../LayerSwitcher/osmappLayers';
-import { fakeStaticExportSkipDefaultMapView } from '../App/fakeStaticExportHelpers';
 import { isEqual } from 'lodash';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
@@ -71,8 +70,6 @@ export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const usePersistMapView = (view: View) => {
   useEffect(() => {
-    if (fakeStaticExportSkipDefaultMapView(view)) return;
-
     window.location.hash = view.join('/');
     localStorage.setItem('mapView', view.join('/'));
   }, [view]);
