@@ -82,8 +82,10 @@ export function splitIconOpacityLayer(
     return [layer];
   }
 
+  // Type cast once for reuse throughout the function
   const symbolLayer = layer as LayerSpecification & {
     paint?: Record<string, unknown>;
+    minzoom?: number;
   };
 
   const paint = symbolLayer.paint;
@@ -102,12 +104,15 @@ export function splitIconOpacityLayer(
     return [layer];
   }
 
-  // Use the higher zoom level if both are present (more conservative)
+  // Determine the zoom level at which the layer becomes visible.
+  // If both icon and text have visible zooms, use the higher one (more conservative).
+  // If only one exists, use that value. The early return above ensures at least one exists.
   const visibleZoom = Math.max(
     iconInfo?.visibleZoom ?? 0,
     textInfo?.visibleZoom ?? 0,
   );
 
+  // This should not happen due to the early return above, but guard against edge cases
   if (visibleZoom === 0) {
     return [layer];
   }
@@ -128,13 +133,14 @@ export function splitIconOpacityLayer(
   }
 
   // Create the new layer with minzoom
+  // Use the higher of the existing minzoom and the computed visible zoom
+  const existingMinzoom = symbolLayer.minzoom ?? 0;
+  const newMinzoom = Math.max(existingMinzoom, visibleZoom);
+
   // We need to cast as unknown first to handle the type transition
   const newLayer = {
     ...layer,
-    minzoom: Math.max(
-      (layer as { minzoom?: number }).minzoom ?? 0,
-      visibleZoom,
-    ),
+    minzoom: newMinzoom,
     paint: newPaint,
   } as unknown as LayerSpecification;
 
