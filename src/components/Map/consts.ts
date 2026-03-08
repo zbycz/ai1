@@ -27,6 +27,10 @@ export const OSMAPP_SOURCES: Record<string, SourceSpecification> = {
     type: 'vector' as const,
     url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${apiKey}`,
   },
+  maptiler_planet_v4: {
+    type: 'vector' as const,
+    url: `https://api.maptiler.com/tiles/planet-v4/tiles.json?key=${apiKey}`,
+  },
   ofr_planet: {
     type: 'vector' as const,
     url: `https://tiles.openfreemap.org/planet`,
