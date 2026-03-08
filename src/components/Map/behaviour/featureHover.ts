@@ -7,11 +7,14 @@ import {
 } from 'maplibre-gl';
 import { climbingLayers } from '../climbingTiles/climbingLayers/climbingLayers';
 import { isMobileDevice } from '../../helpers';
+import { splitIconOpacityLayers } from '../styles/utils/splitIconOpacityLayers';
 
 const HOVER_EXPRESSION = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
 const ICON_OPACITY = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, HOVER_EXPRESSION]; // prettier-ignore
 
 export const addHoverPaint = (origStyle): StyleSpecification => {
+  origStyle.layers = splitIconOpacityLayers(origStyle.layers); // eslint-disable-line no-param-reassign
+
   origStyle.layers
     .filter((layer) => layer.id.match(/^poi-/))
     .forEach((layer) => {
