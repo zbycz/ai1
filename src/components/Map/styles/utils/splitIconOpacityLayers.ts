@@ -4,6 +4,10 @@ type StopsProperty = {
   stops: [number, number][];
 };
 
+type LayerWithIconPaint = LayerSpecification & {
+  paint: Record<string, unknown>;
+};
+
 const isStopsProperty = (value: unknown): value is StopsProperty =>
   typeof value === 'object' &&
   value !== null &&
@@ -42,7 +46,7 @@ export const splitIconOpacityLayers = (
 
       const nextStop = stops[i + 1];
 
-      const newLayer = JSON.parse(JSON.stringify(layer)) as typeof layer;
+      const newLayer = JSON.parse(JSON.stringify(layer)) as LayerWithIconPaint;
 
       // Set minzoom respecting existing layer minzoom
       newLayer.minzoom = Math.max(zoom, layer.minzoom ?? 0);
@@ -59,7 +63,7 @@ export const splitIconOpacityLayers = (
       }
 
       // Replace zoom-based stops with static opacity value
-      (newLayer as any).paint['icon-opacity'] = opacity;
+      newLayer.paint['icon-opacity'] = opacity;
 
       // Generate unique layer id
       newLayer.id = `${layer.id}-z${zoom}`;
