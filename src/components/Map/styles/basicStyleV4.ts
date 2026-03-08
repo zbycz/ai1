@@ -4,7 +4,6 @@
 
 import { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 
-
 import { addHoverPaint } from '../behaviour/featureHover';
 import { GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 import { splitIconOpacityLayers } from './utils/splitIconOpacityLayers';

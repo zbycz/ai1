@@ -461,5 +461,89 @@ describe('splitIconOpacityLayers', () => {
 
       expect(result.map((l) => l.id)).toEqual(['a', 'b', 'c']);
     });
+
+    it('correctly transforms a realistic shortbread-style POI layer', () => {
+      // This is a realistic example based on shortbreadColorfulStyle
+      const layer: LayerSpecification = {
+        source: 'versatiles-shortbread',
+        id: 'poi-amenity',
+        type: 'symbol',
+        'source-layer': 'pois',
+        filter: ['to-boolean', ['get', 'amenity']],
+        minzoom: 16,
+        layout: {
+          'icon-size': {
+            stops: [
+              [16, 0.5],
+              [19, 0.5],
+              [20, 1],
+            ],
+          },
+          'symbol-placement': 'point',
+          'icon-optional': true,
+          'text-font': ['noto_sans_regular'],
+          'icon-image': [
+            'match',
+            ['get', 'amenity'],
+            'bar',
+            'basics:icon-bar',
+            'restaurant',
+            'basics:icon-restaurant',
+            '',
+          ],
+        },
+        paint: {
+          'icon-opacity': {
+            stops: [
+              [16, 0],
+              [17, 0.4],
+            ],
+          },
+          'text-opacity': {
+            stops: [
+              [16, 0],
+              [17, 0.4],
+            ],
+          },
+          'icon-color': 'rgb(85,85,85)',
+          'text-color': 'rgb(85,85,85)',
+        },
+      };
+
+      const result = splitIconOpacityLayers([layer]);
+
+      expect(result).toHaveLength(1);
+      const transformed = result[0] as LayerSpecification & {
+        minzoom?: number;
+        paint?: Record<string, unknown>;
+        layout?: Record<string, unknown>;
+      };
+
+      // Minzoom should be updated to 17 (the zoom where opacity becomes non-zero)
+      expect(transformed.minzoom).toBe(17);
+
+      // Icon and text opacity should be constant values now
+      expect(transformed.paint?.['icon-opacity']).toBe(0.4);
+      expect(transformed.paint?.['text-opacity']).toBe(0.4);
+
+      // Other paint properties should be preserved
+      expect(transformed.paint?.['icon-color']).toBe('rgb(85,85,85)');
+      expect(transformed.paint?.['text-color']).toBe('rgb(85,85,85)');
+
+      // Layout properties should be unchanged
+      expect(transformed.layout?.['icon-size']).toEqual({
+        stops: [
+          [16, 0.5],
+          [19, 0.5],
+          [20, 1],
+        ],
+      });
+
+      // Other layer properties should be preserved
+      expect(transformed.id).toBe('poi-amenity');
+      expect((transformed as { source?: string }).source).toBe(
+        'versatiles-shortbread',
+      );
+    });
   });
 });

@@ -128,14 +128,15 @@ export function splitIconOpacityLayer(
   }
 
   // Create the new layer with minzoom
-  const newLayer: LayerSpecification = {
+  // We need to cast as unknown first to handle the type transition
+  const newLayer = {
     ...layer,
     minzoom: Math.max(
       (layer as { minzoom?: number }).minzoom ?? 0,
       visibleZoom,
     ),
-    paint: newPaint as typeof symbolLayer.paint,
-  };
+    paint: newPaint,
+  } as unknown as LayerSpecification;
 
   return [newLayer];
 }
