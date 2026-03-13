@@ -27,14 +27,13 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20.x
-          cache: yarn
+          bun-version: latest
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: bun install
 
       - name: Build next.js (standalone)
         run: |
@@ -42,7 +41,7 @@ jobs:
           echo "VERCEL_GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> .env
           echo "NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true" >> .env
 
-          NEXTJS_OUTPUT=standalone yarn build
+          NEXTJS_OUTPUT=standalone bun run build
           mv public .next/standalone
           mkdir -p .next/standalone/public/_next
           mv .next/static .next/standalone/public/_next/
@@ -50,7 +49,7 @@ jobs:
       - name: Verify build (SSR check)
         run: |
           cd .next/standalone
-          node server.js &
+          bun server.js &
           sleep 5 # server usually starts in 1 second
           curl --silent --fail localhost:3000/node/6 | grep -q "Originally Detonátor route (this message used for SSR check)" && echo "SSR OK"
 

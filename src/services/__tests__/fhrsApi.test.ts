@@ -1,8 +1,9 @@
 import * as fetchModule from '../fetch';
 import { getEstablishmentRatingValue } from '../fhrsApi';
+import { describe, it, expect, mock, spyOn } from 'bun:test';
 
-jest.mock('../fetch', () => ({
-  fetchJson: jest.fn(),
+mock.module('../fetch', () => ({
+  fetchJson: mock(),
 }));
 
 const mockResponse = {
@@ -42,7 +43,7 @@ const mockResponse = {
 
 describe('fetchRating', () => {
   it('should return a rating between 0 and 5', async () => {
-    jest.spyOn(fetchModule, 'fetchJson').mockResolvedValue(mockResponse);
+    spyOn(fetchModule, 'fetchJson').mockResolvedValue(mockResponse);
 
     const rating = await getEstablishmentRatingValue(269382);
     expect(rating).toBe(5);

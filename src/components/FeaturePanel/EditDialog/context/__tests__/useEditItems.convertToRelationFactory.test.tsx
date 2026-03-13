@@ -1,3 +1,4 @@
+// @happy-dom
 import { fetchParentFeatures } from '../../../../../services/osm/fetchParentFeatures';
 import { fetchWays } from '../../../../../services/osm/fetchWays';
 import { addEmptyOriginalState, fetchFreshItem } from '../itemsHelpers';
@@ -5,19 +6,29 @@ import { getNewId } from '../../../../../services/getCoordsFeature';
 
 import { DataItem } from '../types';
 import { convertToRelationFactory } from '../convertToRelationFactory';
+import { describe, it, expect, beforeEach, mock } from 'bun:test';
 
-jest.mock('../../../../../services/osm/fetchParentFeatures', () => ({
-  fetchParentFeatures: jest.fn(),
+mock.module('../../../../../services/osm/fetchParentFeatures', () => ({
+  fetchParentFeatures: mock(),
 }));
-jest.mock('../../../../../services/osm/fetchWays', () => ({
-  fetchWays: jest.fn(),
+mock.module('../../../../../services/osm/fetchWays', () => ({
+  fetchWays: mock(),
 }));
-jest.mock('../itemsHelpers', () => {
-  const actual = jest.requireActual('../itemsHelpers');
-  return { ...actual, fetchFreshItem: jest.fn() };
-});
-jest.mock('../../../../../services/getCoordsFeature', () => ({
-  getNewId: jest.fn(),
+mock.module('../itemsHelpers', () => ({
+  addEmptyOriginalState: (dataItem: any) => ({
+    ...dataItem,
+    originalState: {
+      tags: {},
+      isDeleted: false,
+      nodeLonLat: undefined,
+      nodes: undefined,
+      members: undefined,
+    },
+  }),
+  fetchFreshItem: mock(),
+}));
+mock.module('../../../../../services/getCoordsFeature', () => ({
+  getNewId: mock(),
 }));
 
 const initialNode: DataItem = addEmptyOriginalState({
@@ -46,7 +57,6 @@ const parentItem = {
 
 describe('convertToRelationFactory', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
   });
 
   it('should convert node to relation', async () => {

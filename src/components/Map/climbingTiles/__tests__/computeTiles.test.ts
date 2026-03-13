@@ -1,5 +1,6 @@
 import { computeTiles } from '../computeTiles';
 import { LngLat } from 'maplibre-gl';
+import { describe, it, expect } from 'bun:test';
 
 describe('computeTiles', () => {
   it('should correctly compute tiles for a given zoom level and bounding box', () => {

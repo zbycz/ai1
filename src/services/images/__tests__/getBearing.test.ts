@@ -1,7 +1,8 @@
 import { LonLat } from '../../types';
 import { getBearing } from '../getImageFromCenterFactory';
+import { describe, it, expect, mock } from 'bun:test';
 
-jest.mock('maplibre-gl', () => ({}));
+mock.module('maplibre-gl', () => ({}));
 
 const point: LonLat = [0, 0];
 const pointAbove: LonLat = [0, 1];

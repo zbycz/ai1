@@ -17,14 +17,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20.x
-          cache: yarn
+          bun-version: latest
 
       - name: Install deps
-        run: yarn install --frozen-lockfile
+        run: bun install
 
       - name: Build next.js (hacky static export)
         run: |
@@ -32,12 +31,12 @@ jobs:
           export VERCEL_GIT_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
           export NEXT_PUBLIC_FAKE_STATIC_EXPORT=true
           export NEXT_PUBLIC_FORCE_PROJECT=osmapp.org
-          yarn build
+          bun run build
           mkdir public/_next
           cp -r .next/static public/_next
           echo -e "User-agent: *\nDisallow: /" > public/robots.txt
 
-          yarn start &
+          bun run start &
           sleep 5 # server usually starts in 1 second
 
           curl --cookie "hideHomepage=yes" http://localhost:3000 > public/index.html

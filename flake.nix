@@ -19,16 +19,13 @@
           };
         });
   in {
-    overlays.default = final: prev: rec {
-      nodejs = prev.nodejs_20;
-      yarn = prev.yarn.override {inherit nodejs;};
+    overlays.default = final: prev: {
     };
 
     devShells = forEachSupportedSystem ({pkgs}: {
       default = pkgs.mkShell {
         packages = with pkgs; [
-          nodejs
-          yarn
+          bun
           nodePackages.typescript-language-server
           prettierd
 
@@ -36,7 +33,7 @@
         ];
         shellHook = ''
           if [ ! -d node_modules ]; then
-            echo "Use yarn to install dependencies"
+            echo "Use bun install to install dependencies"
           fi
         '';
         env = {LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [pkgs.libuuid];};

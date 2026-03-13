@@ -1,5 +1,6 @@
 import { osmToClimbingRoutes } from '../osmToClimbingRoutes';
 import { Feature } from '../../../../../services/types';
+import { test, expect } from 'bun:test';
 
 const feature: Feature = {
   type: 'Feature',

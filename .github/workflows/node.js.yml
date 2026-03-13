@@ -12,12 +12,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v3
+      - name: Use Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 20.x
-          cache: 'yarn'
-      - run: yarn install
-      - run: yarn jest --ci
-      - run: yarn prettier . --check
-      - run: yarn lint
+          bun-version: latest
+      - run: bun install
+      - run: bun test
+      - run: bun run prettier . --check
+      - run: bun run lint

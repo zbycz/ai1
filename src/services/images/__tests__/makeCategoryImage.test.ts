@@ -1,4 +1,5 @@
 import { placeImageToCanvas } from '../makeCategoryImage';
+import { describe, it, expect, mock } from 'bun:test';
 
 const extractXY = (call) => [call[5], call[6]];
 const mockImage = (url: string) => {
@@ -9,7 +10,7 @@ const mockImage = (url: string) => {
 describe('placeImageToCanvas', () => {
   it('1 image', () => {
     const images = ['410x120'].map(mockImage);
-    const ctxMock = { drawImage: jest.fn() };
+    const ctxMock = { drawImage: mock() };
     placeImageToCanvas(images, ctxMock as unknown as CanvasRenderingContext2D);
 
     expect(ctxMock.drawImage).toHaveBeenCalledWith(
@@ -27,7 +28,7 @@ describe('placeImageToCanvas', () => {
 
   it('1 column', () => {
     const images = ['410x120', '410x150'].map(mockImage);
-    const ctxMock = { drawImage: jest.fn() };
+    const ctxMock = { drawImage: mock() };
     placeImageToCanvas(images, ctxMock as unknown as CanvasRenderingContext2D);
 
     expect(ctxMock.drawImage.mock.calls.map(extractXY)).toEqual([
@@ -38,7 +39,7 @@ describe('placeImageToCanvas', () => {
 
   it('2 columns', () => {
     const images = ['410x120', '410x150', '410x90'].map(mockImage);
-    const ctxMock = { drawImage: jest.fn() };
+    const ctxMock = { drawImage: mock() };
     placeImageToCanvas(images, ctxMock as unknown as CanvasRenderingContext2D);
 
     expect(ctxMock.drawImage.mock.calls.map(extractXY)).toEqual([
@@ -50,7 +51,7 @@ describe('placeImageToCanvas', () => {
 
   it('3 columns', () => {
     const images = new Array(20).fill('410x90').map(mockImage);
-    const ctxMock = { drawImage: jest.fn() };
+    const ctxMock = { drawImage: mock() };
     placeImageToCanvas(images, ctxMock as unknown as CanvasRenderingContext2D);
 
     expect(ctxMock.drawImage.mock.calls.map(extractXY)).toEqual([

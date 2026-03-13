@@ -1,5 +1,6 @@
 import { getNextWikimediaCommonsIndex } from '../photo';
 import { FeatureTags } from '../../../../../services/types';
+import { describe, it, expect } from 'bun:test';
 
 describe('getNextWikimediaCommonsIndex', () => {
   it('should return 0 when there are no wikimedia_commons keys', () => {

@@ -1,8 +1,9 @@
 import { mergeResultFn } from '../useLoadImages';
 import { ImageDef } from '../../../../services/types';
 import { ImageType } from '../../../../services/images/getImageDefs';
+import { describe, it, expect, mock } from 'bun:test';
 
-jest.mock('maplibre-gl', () => ({}));
+mock.module('maplibre-gl', () => ({}));
 
 const def1: ImageDef = { type: 'tag', k: 'key', v: '1', instant: false };
 const def2: ImageDef = { type: 'tag', k: 'key2', v: '2', instant: false };

@@ -20,6 +20,7 @@ export const NODE = {
 export const NODE_FEATURE = {
   type: 'Feature',
   center: [14.3904481, 50.103985],
+  geometry: undefined,
   osmMeta: {
     changeset: 68073678,
     id: 2904943126,
@@ -36,11 +37,13 @@ export const NODE_FEATURE = {
   tags: {
     amenity: 'library',
   },
+  members: undefined,
   imageDefs: [
     { type: 'center', service: 'panoramax', center: [14.3904481, 50.103985] },
     { type: 'center', service: 'kartaview', center: [14.3904481, 50.103985] },
     { type: 'center', service: 'mapillary', center: [14.3904481, 50.103985] },
   ],
+  deleted: undefined,
 };
 
 export const WAY = {
@@ -61,6 +64,7 @@ export const WAY = {
 export const WAY_FEATURE = {
   type: 'Feature',
   center: [14, 50],
+  geometry: undefined,
   osmMeta: {
     changeset: 104162807,
     id: 51050330,
@@ -72,11 +76,13 @@ export const WAY_FEATURE = {
   },
   properties: { class: 'school', subclass: 'school' },
   tags: { amenity: 'school' },
+  members: undefined,
   imageDefs: [
     { type: 'center', service: 'panoramax', center: [14, 50] },
     { type: 'center', service: 'kartaview', center: [14, 50] },
     { type: 'center', service: 'mapillary', center: [14, 50] },
   ],
+  deleted: undefined,
 };
 export const RELATION = {
   elements: [
@@ -111,6 +117,7 @@ export const RELATION = {
 export const RELATION_FEATURE = {
   type: 'Feature',
   center: [15, 51],
+  geometry: undefined,
   members: [
     {
       ref: 8166328,
@@ -141,4 +148,5 @@ export const RELATION_FEATURE = {
     type: 'multipolygon',
   },
   imageDefs: [],
+  deleted: undefined,
 };

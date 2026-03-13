@@ -1,5 +1,6 @@
 import { OsmItem, OsmResponse } from '../types';
 import { overpassToGeojsons } from '../overpassToGeojsons';
+import { test, expect } from 'bun:test';
 
 const otherCrag: OsmItem = {
   type: 'node',

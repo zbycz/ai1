@@ -12,31 +12,33 @@ import {
 } from './apiMocks.fixture';
 import * as makeCategoryImageModule from '../makeCategoryImage';
 import english from '../../../locales/vocabulary';
+import { test, expect, beforeEach, mock, spyOn } from 'bun:test';
 
-jest.mock('../makeCategoryImage', () => ({
-  makeCategoryImage: jest.fn(),
+mock.module('../makeCategoryImage', () => ({
+  makeCategoryImage: mock(),
 }));
 
-jest.mock('../../fetch', () => ({
-  fetchJson: jest.fn(),
+mock.module('../../fetch', () => ({
+  fetchJson: mock(),
 }));
-jest.mock('maplibre-gl', () => ({}));
+mock.module('maplibre-gl', () => ({}));
 
-const mockApi = (mock: ApiMock) => {
-  jest.spyOn(fetchModule, 'fetchJson').mockImplementation((url) => {
-    expect(url).toEqual(mock.url);
-    return Promise.resolve(mock.response);
+const mockApi = (apiMock: ApiMock) => {
+  spyOn(fetchModule, 'fetchJson').mockImplementation((url) => {
+    expect(url).toEqual(apiMock.url);
+    return Promise.resolve(apiMock.response);
   });
 };
 
 beforeEach(() => {
-  jest.restoreAllMocks();
+  mock.restore();
   expect.hasAssertions();
 });
 
-jest.mock('../../intl', () => ({
+mock.module('../../intl', () => ({
   intl: { lang: 'en' },
   t: (key, obj) => {
+    if (!obj) return english[key] || key;
     return Object.entries(obj).reduce(
       (acc, [key, val]) => acc.replace(`__${key}__`, val),
       english[key],
@@ -135,9 +137,7 @@ test('wikimedia_commons=File:', async () => {
 
 test('wikimedia_commons=Category:', async () => {
   mockApi(COMMONS_CATEGORY);
-  jest
-    .spyOn(makeCategoryImageModule, 'makeCategoryImage')
-    .mockResolvedValue('xyz');
+  spyOn(makeCategoryImageModule, 'makeCategoryImage').mockResolvedValue('xyz');
   expect(
     await getImageFromApiRaw({
       type: 'tag',

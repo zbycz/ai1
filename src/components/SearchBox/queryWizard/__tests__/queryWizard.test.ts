@@ -1,5 +1,6 @@
 import { generateQuery } from '../generateQuery';
 import { getAST, queryWizardLabel } from '../queryWizard';
+import { describe, it, expect, test } from 'bun:test';
 
 describe('userInput -> query works', () => {
   it('should work for simple queries', () => {

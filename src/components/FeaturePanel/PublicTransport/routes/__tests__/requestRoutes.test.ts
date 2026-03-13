@@ -1,14 +1,15 @@
 import * as fetchModule from '../../../../../services/fetch';
 import { requestLines } from '../requestRoutes';
+import { test, expect, mock, spyOn } from 'bun:test';
 
 // more test cases along with expected outcomes can be found in https://github.com/zbycz/osmapp/pull/1160
 
-jest.mock('../../../../../services/fetch', () => ({
-  fetchJson: jest.fn(),
+mock.module('../../../../../services/fetch', () => ({
+  fetchJson: mock(),
 }));
 
 test('conversion', async () => {
-  jest.spyOn(fetchModule, 'fetchJson').mockResolvedValue({
+  spyOn(fetchModule, 'fetchJson').mockResolvedValue({
     elements: [
       {
         type: 'relation',
