@@ -32,18 +32,27 @@ mock.module('../../tagging/idTaggingScheme', () => ({
   addSchemaToFeature: mock(),
 }));
 
+mock.module('next-codegrid', () => ({
+  resolveCountryCode: mock().mockResolvedValue(null),
+}));
+
 describe('fetchFeature', () => {
+  let isServer: ReturnType<typeof spyOn>;
+  let isBrowser: ReturnType<typeof spyOn>;
+  let fetchJson: ReturnType<typeof spyOn>;
+
   beforeEach(() => {
+    mock.restore();
     intl.lang = 'en'; // TODO maybe refactor it without need for intl?
     spyOn(tagging, 'fetchSchemaTranslations').mockResolvedValue(undefined); // fetchFeature() fetches the translations for getSchemaForFeature()
     spyOn(idTaggingScheme, 'addSchemaToFeature').mockImplementation((f) => f); // this is covered in idTaggingScheme.test.ts
+    isServer = spyOn(helpers, 'isServer').mockReturnValue(true);
+    isBrowser = spyOn(helpers, 'isBrowser').mockReturnValue(false);
+    fetchJson = spyOn(fetch, 'fetchJson').mockReset();
   });
 
-  const isServer = spyOn(helpers, 'isServer').mockReturnValue(true);
-  const isBrowser = spyOn(helpers, 'isBrowser').mockReturnValue(false);
-
   it('should work for node', async () => {
-    const fetchJson = spyOn(fetch, 'fetchJson').mockResolvedValue(NODE);
+    fetchJson.mockResolvedValue(NODE);
 
     const feature = await fetchFeature({ type: 'node', id: 123 });
     expect(fetchJson).toHaveBeenCalledTimes(1);
@@ -55,7 +64,7 @@ describe('fetchFeature', () => {
   };
 
   it('should work for way', async () => {
-    const fetchJson = spyOn(fetch, 'fetchJson').mockImplementation((url) =>
+    fetchJson.mockImplementation((url) =>
         Promise.resolve(url.match(/overpass/) ? OVERPASS_CENTER_RESPONSE : WAY),
       );
 
@@ -69,7 +78,7 @@ describe('fetchFeature', () => {
   };
 
   it('should work for relation', async () => {
-    const fetchJson = spyOn(fetch, 'fetchJson').mockImplementation((url) =>
+    fetchJson.mockImplementation((url) =>
         Promise.resolve(
           url.match(/overpass/) ? OVERPASS_GEOM_RESPONSE : RELATION,
         ),
@@ -85,7 +94,7 @@ describe('fetchFeature', () => {
     isServer.mockReturnValue(false);
     addFeatureCenterToCache('w51050330', [123, 456]);
 
-    const fetchJson = spyOn(fetch, 'fetchJson').mockResolvedValue(WAY);
+    fetchJson.mockResolvedValue(WAY);
 
     const feature = await fetchFeature({ type: 'way', id: 51050330 });
     expect(fetchJson).toHaveBeenCalledTimes(1);

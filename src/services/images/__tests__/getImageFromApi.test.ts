@@ -38,6 +38,7 @@ beforeEach(() => {
 mock.module('../../intl', () => ({
   intl: { lang: 'en' },
   t: (key, obj) => {
+    if (!obj) return english[key] || key;
     return Object.entries(obj).reduce(
       (acc, [key, val]) => acc.replace(`__${key}__`, val),
       english[key],

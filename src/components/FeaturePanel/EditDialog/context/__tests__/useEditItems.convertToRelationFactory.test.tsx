@@ -1,3 +1,4 @@
+// @happy-dom
 import { fetchParentFeatures } from '../../../../../services/osm/fetchParentFeatures';
 import { fetchWays } from '../../../../../services/osm/fetchWays';
 import { addEmptyOriginalState, fetchFreshItem } from '../itemsHelpers';
@@ -13,10 +14,19 @@ mock.module('../../../../../services/osm/fetchParentFeatures', () => ({
 mock.module('../../../../../services/osm/fetchWays', () => ({
   fetchWays: mock(),
 }));
-mock.module('../itemsHelpers', async () => {
-  const actual = await import('../itemsHelpers');
-  return { ...actual, fetchFreshItem: mock() };
-});
+mock.module('../itemsHelpers', () => ({
+  addEmptyOriginalState: (dataItem: any) => ({
+    ...dataItem,
+    originalState: {
+      tags: {},
+      isDeleted: false,
+      nodeLonLat: undefined,
+      nodes: undefined,
+      members: undefined,
+    },
+  }),
+  fetchFreshItem: mock(),
+}));
 mock.module('../../../../../services/getCoordsFeature', () => ({
   getNewId: mock(),
 }));
