@@ -1,5 +1,6 @@
 import { getIdFromShortener, getShortenerSlug } from '../shortener';
 import { OsmId, OsmType } from '../types';
+import { test, describe, it, expect } from 'bun:test';
 
 const node: OsmId = { type: 'node', id: 11_660_046_031 };
 const way: OsmId = { type: 'way', id: 173_514_748 };

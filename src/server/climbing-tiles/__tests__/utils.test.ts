@@ -1,13 +1,14 @@
 import { getHoursUntilNextRefresh } from '../addCorsAndCache';
+import { test, expect, afterEach, mock, spyOn } from 'bun:test';
 
 afterEach(() => {
-  jest.restoreAllMocks();
+  mock.restore();
 });
 
 test('getHoursUntilNextRefresh', () => {
-  jest.spyOn(Date.prototype, 'getUTCHours').mockReturnValue(2);
+  spyOn(Date.prototype, 'getUTCHours').mockReturnValue(2);
   expect(getHoursUntilNextRefresh()).toBe(0);
 
-  jest.spyOn(Date.prototype, 'getUTCHours').mockReturnValue(3);
+  spyOn(Date.prototype, 'getUTCHours').mockReturnValue(3);
   expect(getHoursUntilNextRefresh()).toBe(23);
 });

@@ -1,6 +1,7 @@
 import { getImageDefs } from '../getImageDefs';
 
 import { ImageDef, LonLat } from '../../types';
+import { test, expect } from 'bun:test';
 
 const center: LonLat = [14, 50];
 

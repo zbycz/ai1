@@ -1,4 +1,5 @@
 import { cragsToGeojson } from '../fetchCrags';
+import { test, expect } from 'bun:test';
 
 /*
 [out:json][timeout:25];

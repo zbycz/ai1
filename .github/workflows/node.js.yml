@@ -17,6 +17,6 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
-      - run: bun run jest --ci
+      - run: bun test
       - run: bun run prettier . --check
       - run: bun run lint

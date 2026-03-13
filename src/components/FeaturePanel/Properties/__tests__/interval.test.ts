@@ -1,4 +1,5 @@
 import { humanInterval } from '../interval';
+import { describe, it, expect } from 'bun:test';
 
 describe('splitDateRangeAtMidnight', () => {
   it('should format valid intervals correclty', () => {

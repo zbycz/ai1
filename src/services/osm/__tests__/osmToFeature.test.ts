@@ -1,6 +1,7 @@
 import { osmToFeature } from '../osmToFeature';
 
 import { ImageDef } from '../../types';
+import { test, expect } from 'bun:test';
 
 const nodeResponse = {
   type: 'node',

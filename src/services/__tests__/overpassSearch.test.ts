@@ -2,6 +2,7 @@ import {
   overpassGeomToGeojson,
   OverpassResponse,
 } from '../overpass/overpassSearch';
+import { test, expect } from 'bun:test';
 
 /*
 [out:json][timeout:25];

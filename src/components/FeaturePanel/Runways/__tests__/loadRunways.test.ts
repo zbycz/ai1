@@ -1,12 +1,12 @@
 import * as fetchModule from '../../../../services/fetch';
 import { loadRunways } from '../loadRunways';
 import { OsmId } from '../../../../services/types';
+import { test, expect, mock, spyOn } from 'bun:test';
 
-jest.mock('../../../../services/fetch');
+mock.module('../../../../services/fetch', () => ({ fetchText: mock() }));
 
 test('parses overpass response', async () => {
-  jest
-    .spyOn(fetchModule, 'fetchText')
+  spyOn(fetchModule, 'fetchText')
     .mockResolvedValue('4052652||way||12/30||45||3250||concrete\n');
 
   const osmId: OsmId = { type: 'node', id: 123 };

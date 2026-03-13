@@ -13,39 +13,37 @@ import {
 import { intl } from '../../intl';
 import * as tagging from '../../tagging/translations';
 import * as idTaggingScheme from '../../tagging/idTaggingScheme';
+import { describe, it, expect, beforeEach, mock, spyOn } from 'bun:test';
 
-jest.mock('../../../components/helpers', () => ({
-  isServer: jest.fn(),
-  isBrowser: jest.fn(),
+mock.module('../../../components/helpers', () => ({
+  isServer: mock(),
+  isBrowser: mock(),
 }));
 
-jest.mock('../../fetch', () => ({
-  fetchJson: jest.fn(),
+mock.module('../../fetch', () => ({
+  fetchJson: mock(),
 }));
 
-jest.mock('../../tagging/translations', () => ({
-  fetchSchemaTranslations: jest.fn(),
+mock.module('../../tagging/translations', () => ({
+  fetchSchemaTranslations: mock(),
 }));
 
-jest.mock('../../tagging/idTaggingScheme', () => ({
-  addSchemaToFeature: jest.fn(),
+mock.module('../../tagging/idTaggingScheme', () => ({
+  addSchemaToFeature: mock(),
 }));
 
 describe('fetchFeature', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
     intl.lang = 'en'; // TODO maybe refactor it without need for intl?
-    jest.spyOn(tagging, 'fetchSchemaTranslations').mockResolvedValue(undefined); // fetchFeature() fetches the translations for getSchemaForFeature()
-    jest
-      .spyOn(idTaggingScheme, 'addSchemaToFeature')
-      .mockImplementation((f) => f); // this is covered in idTaggingScheme.test.ts
+    spyOn(tagging, 'fetchSchemaTranslations').mockResolvedValue(undefined); // fetchFeature() fetches the translations for getSchemaForFeature()
+    spyOn(idTaggingScheme, 'addSchemaToFeature').mockImplementation((f) => f); // this is covered in idTaggingScheme.test.ts
   });
 
-  const isServer = jest.spyOn(helpers, 'isServer').mockReturnValue(true);
-  const isBrowser = jest.spyOn(helpers, 'isBrowser').mockReturnValue(false);
+  const isServer = spyOn(helpers, 'isServer').mockReturnValue(true);
+  const isBrowser = spyOn(helpers, 'isBrowser').mockReturnValue(false);
 
   it('should work for node', async () => {
-    const fetchJson = jest.spyOn(fetch, 'fetchJson').mockResolvedValue(NODE);
+    const fetchJson = spyOn(fetch, 'fetchJson').mockResolvedValue(NODE);
 
     const feature = await fetchFeature({ type: 'node', id: 123 });
     expect(fetchJson).toHaveBeenCalledTimes(1);
@@ -57,9 +55,7 @@ describe('fetchFeature', () => {
   };
 
   it('should work for way', async () => {
-    const fetchJson = jest
-      .spyOn(fetch, 'fetchJson')
-      .mockImplementation((url) =>
+    const fetchJson = spyOn(fetch, 'fetchJson').mockImplementation((url) =>
         Promise.resolve(url.match(/overpass/) ? OVERPASS_CENTER_RESPONSE : WAY),
       );
 
@@ -73,9 +69,7 @@ describe('fetchFeature', () => {
   };
 
   it('should work for relation', async () => {
-    const fetchJson = jest
-      .spyOn(fetch, 'fetchJson')
-      .mockImplementation((url) =>
+    const fetchJson = spyOn(fetch, 'fetchJson').mockImplementation((url) =>
         Promise.resolve(
           url.match(/overpass/) ? OVERPASS_GEOM_RESPONSE : RELATION,
         ),
@@ -91,7 +85,7 @@ describe('fetchFeature', () => {
     isServer.mockReturnValue(false);
     addFeatureCenterToCache('w51050330', [123, 456]);
 
-    const fetchJson = jest.spyOn(fetch, 'fetchJson').mockResolvedValue(WAY);
+    const fetchJson = spyOn(fetch, 'fetchJson').mockResolvedValue(WAY);
 
     const feature = await fetchFeature({ type: 'way', id: 51050330 });
     expect(fetchJson).toHaveBeenCalledTimes(1);

@@ -1,5 +1,6 @@
 import { getDiffXml } from '../getDIffXml';
 import { DataItem } from '../../../../components/FeaturePanel/EditDialog/context/types';
+import { test, expect } from 'bun:test';
 
 const nodeNew = {
   shortId: 'n-1',
