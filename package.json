@@ -6,7 +6,7 @@
   },
   "scripts": {
     "test": "jest",
-    "lint": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "prettify": "prettier . --write"
   },
   "dependencies": {
