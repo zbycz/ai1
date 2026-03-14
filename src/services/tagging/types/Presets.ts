@@ -98,7 +98,7 @@ export type Presets = {
   [presetKey: string]: Preset;
 };
 
-export type RawPresets = {
+type RawPresets = {
   [presetKey: string]: Omit<Preset, 'presetKey'>;
 };
 

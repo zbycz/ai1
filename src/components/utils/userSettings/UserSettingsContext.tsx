@@ -59,10 +59,10 @@ const initialUserSettings: UserSettingsType = {
   'climbing.splitPaneSize': null,
 };
 
-export const UserSettingsContext =
+const UserSettingsContext =
   createContext<UserSettingsContextType>(undefined);
 
-export const UserSettingsProvider: React.FC = ({ children }) => {
+const UserSettingsProvider: React.FC = ({ children }) => {
   const [userSettings, setUserSettings] = usePersistedState<UserSettingsType>(
     'userSettings',
     initialUserSettings,

@@ -64,7 +64,7 @@ const applyLineTypes =
           },
     );
 
-export const stringifyPath = (path: PathPoints): string | undefined => {
+const stringifyPath = (path: PathPoints): string | undefined => {
   if (!path || path.length === 0) return undefined;
 
   const head = encodePoint(path[0]);

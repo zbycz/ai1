@@ -4,53 +4,53 @@ import { naturalSort } from './array';
 
 // @TODO move file outside of climbing
 
-export const getWikimediaCommonsKey = (index: number) =>
+const getWikimediaCommonsKey = (index: number) =>
   `wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`;
 
-export const addFilePrefix = (name: string) => `File:${name}`;
+const addFilePrefix = (name: string) => `File:${name}`;
 
 export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 
-export const isWikimediaCommons = (tag: string) =>
+const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');
 
-export const hasWikimediaCommons = (tags: FeatureTags) =>
+const hasWikimediaCommons = (tags: FeatureTags) =>
   Object.keys(tags).some((tag) => isWikimediaCommons(tag));
 
-export const isWikimediaCommonsPhoto = ([key, value]: [string, string]) => {
+const isWikimediaCommonsPhoto = ([key, value]: [string, string]) => {
   // regexp to match wikimedia_commons, wikimedia_commons:2, etc. but not  wikimedia_commons:path, wikimedia_commons:whatever
   const re = /^wikimedia_commons(:\d+)?$/;
   return re.test(key) && value.startsWith('File:');
 };
 
-export const getWikimediaCommonsPhotoTags = (tags: FeatureTags) => {
+const getWikimediaCommonsPhotoTags = (tags: FeatureTags) => {
   return naturalSort(
     Object.entries(tags).filter(isWikimediaCommonsPhoto),
     (item) => item[0],
   );
 };
-export const getWikimediaCommonsPhotoTagsObject = (tags: FeatureTags) => {
+const getWikimediaCommonsPhotoTagsObject = (tags: FeatureTags) => {
   return getWikimediaCommonsPhotoTags(tags).reduce(
     (acc, [tagKey, tagValue]) => ({ ...acc, [tagKey]: tagValue }),
     {},
   );
 };
 
-export const getWikimediaCommonsPhotoKeys = (tags: FeatureTags) =>
+const getWikimediaCommonsPhotoKeys = (tags: FeatureTags) =>
   getWikimediaCommonsPhotoTags(tags).map(([tagKey, _tagValue]) => tagKey);
 
-export const getWikimediaCommonsPhotoValues = (tags: FeatureTags) =>
+const getWikimediaCommonsPhotoValues = (tags: FeatureTags) =>
   getWikimediaCommonsPhotoTags(tags).map(([_tagKey, tagValue]) => tagValue);
 
-export const isWikimediaCommonsPhotoPath = (tag: string) => {
+const isWikimediaCommonsPhotoPath = (tag: string) => {
   const re = /^wikimedia_commons(:\d+)*:path$/;
   return re.test(tag);
 };
 
-export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
+const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommonsPhotoPath);
 
-export const getWikimediaCommonsTags = (tags: FeatureTags) => {
+const getWikimediaCommonsTags = (tags: FeatureTags) => {
   return naturalSort(
     Object.entries(tags).filter(([key]) => {
       return isWikimediaCommons(key);
@@ -59,11 +59,11 @@ export const getWikimediaCommonsTags = (tags: FeatureTags) => {
   );
 };
 
-export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
+const getWikimediaCommonsKeys = (tags: FeatureTags) =>
   getWikimediaCommonsTags(tags).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
 
 // @deprecated this function must be refactored, in fact it returns "Last Index", but it is hidden inside - see history
-export const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
+const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
   const keys = getWikimediaCommonsKeys(tags);
 
   const maxKey = keys.reduce((max, key) => {
@@ -115,7 +115,7 @@ const getResolutionAccordingZoom = ({ windowDimensions, photoZoom }) => {
   return width;
 };
 
-export const getResolution = ({
+const getResolution = ({
   windowDimensions,
   photoPath,
   photoZoom,

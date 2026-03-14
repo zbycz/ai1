@@ -21,9 +21,9 @@ const useOsmUserState = (cookies) => {
   return useState<OsmUser | undefined>(initialState);
 };
 
-export const OsmAuthContext = createContext<OsmAuthType>(undefined);
+const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
-export const OsmAuthProvider = ({ children, cookies }) => {
+const OsmAuthProvider = ({ children, cookies }) => {
   const [loading, setLoading] = useState(false);
   const [osmUser, setOsmUser] = useOsmUserState(cookies);
 

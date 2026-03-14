@@ -64,7 +64,7 @@ const osmTypeToGeometries = (osmType: string): Preset['geometry'] => {
   return ['point'];
 };
 
-export const geometryMatchesOsmType = (
+const geometryMatchesOsmType = (
   presetGeometry: Preset['geometry'],
   osmType: OsmType,
 ) =>
@@ -98,7 +98,7 @@ Object.values(allPresets).forEach((preset) => {
 
 // inspired by _this.matchTags() in iD codebase
 // takes ~1ms
-export const findPreset = (type: OsmType, tags: FeatureTags): Preset => {
+const findPreset = (type: OsmType, tags: FeatureTags): Preset => {
   const candidates = [];
 
   index[type].forEach((candidate) => {

@@ -2,7 +2,7 @@ import { GradeSystem } from '../../../services/tagging/climbing/gradeSystems';
 import { isEqual } from 'lodash';
 import { Interval } from './getClimbingFilter';
 
-export const mapClimbingFilter = {
+const mapClimbingFilter = {
   userSystem: undefined,
   gradeInterval: undefined,
   minimumRoutes: undefined,

@@ -50,12 +50,12 @@ interface Props {
   tags?: Values;
 }
 
-export const Translation = ({ id, values, tags }: Props) => {
+const Translation = ({ id, values, tags }: Props) => {
   const html = replaceTags(t(id, values), tags);
   return <span data-id={id} dangerouslySetInnerHTML={{ __html: html }} />; // eslint-disable-line react/no-danger
 };
 
-export const changeLang = (langId: string) => {
+const changeLang = (langId: string) => {
   if (langId === intl.lang) return;
   Cookies.set('lang', langId, { expires: 365, path: '/' });
 
@@ -69,7 +69,7 @@ export const changeLang = (langId: string) => {
   );
 };
 
-export const setIntl = (initialIntl: Intl) => {
+const setIntl = (initialIntl: Intl) => {
   if (initialIntl) {
     if (!LANGUAGES[initialIntl.lang]) {
       throw new Error(`Invalid language: ${initialIntl.lang}`);
@@ -80,7 +80,7 @@ export const setIntl = (initialIntl: Intl) => {
   }
 };
 
-export const InjectIntl = ({ intl: globalIntl }) => (
+const InjectIntl = ({ intl: globalIntl }) => (
   <script
     // eslint-disable-next-line react/no-danger
     dangerouslySetInnerHTML={{
@@ -94,7 +94,7 @@ if (isBrowser()) {
   setIntl((window as any).GLOBAL_INTL);
 }
 
-export const setIntlForSSR = async (ctx) => {
+const setIntlForSSR = async (ctx) => {
   if (isServer()) {
     setIntl(await getServerIntl(ctx));
   }

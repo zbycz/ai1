@@ -69,7 +69,7 @@ const eatPreset = (preset: Preset, fields: Field[]) => {
   return fields.filter((field) => !preset.tags[field.key]);
 };
 
-export const getFields = (preset: Preset) => {
+const getFields = (preset: Preset) => {
   const fields = resolveFields(preset, 'fields');
   const moreFields = resolveFields(preset, 'moreFields');
   const universalFields = getUniversalFields();
@@ -81,7 +81,7 @@ export const getFields = (preset: Preset) => {
   };
 };
 
-export const translateField = (
+const translateField = (
   fieldTranslation: FieldTranslation | undefined,
   v: string,
 ): string => {

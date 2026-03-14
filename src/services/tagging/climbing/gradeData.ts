@@ -173,7 +173,7 @@ export const gradeColors = {
   '14': { light: '#9C0101', dark: '#690000' },
 };
 
-export const useGetSliderColors = (grades: string[]) => {
+const useGetSliderColors = (grades: string[]) => {
   const uniqueGrades = [...new Set(grades)];
   const g4 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('4-')]);
   const g6 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('6-')]);
@@ -209,10 +209,10 @@ export const csvToArray = (csv: string) => {
   });
 };
 
-export const transposeArrays = (t: Array<Array<any>>) =>
+const transposeArrays = (t: Array<Array<any>>) =>
   t[0].map((_, colIndex) => t.map((row) => row[colIndex]));
 
-export const getCsvGradeData = (): GradeTable => {
+const getCsvGradeData = (): GradeTable => {
   const transposedTable = transposeArrays(csvToArray(gradeTableString));
 
   return transposedTable.reduce(

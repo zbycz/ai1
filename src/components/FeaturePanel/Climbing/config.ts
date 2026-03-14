@@ -32,6 +32,6 @@ export const useConfig = () => {
   };
 };
 
-export const CLIMBING_ROUTE_ROW_HEIGHT = 50;
-export const DIALOG_TOP_BAR_HEIGHT = 56;
-export const SPLIT_PANE_DEFAULT_SIZE = '60vh';
+const CLIMBING_ROUTE_ROW_HEIGHT = 50;
+const DIALOG_TOP_BAR_HEIGHT = 56;
+const SPLIT_PANE_DEFAULT_SIZE = '60vh';

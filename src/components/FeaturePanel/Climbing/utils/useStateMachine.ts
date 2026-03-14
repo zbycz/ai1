@@ -32,7 +32,7 @@ export type ActionWithCallback = {
   nextState: State;
   callback?: (props: unknown) => void;
 };
-export type Machine = {
+type Machine = {
   [key in State]: Partial<Record<StateAction, ActionWithCallback>>;
 };
 

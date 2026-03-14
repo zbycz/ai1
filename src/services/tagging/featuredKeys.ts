@@ -1,4 +1,4 @@
-export type FeaturedKeyRenderer =
+type FeaturedKeyRenderer =
   | 'WebsiteRenderer'
   | 'PhoneRenderer'
   | 'OpeningHoursRenderer'
@@ -10,12 +10,12 @@ export type FeaturedKeyRenderer =
   | 'NullRenderer' // - doesn't render among other FeaturedTags
   | 'DescriptionRenderer'; // - used directly in FeaturePanel
 
-export type FeaturedKey = {
+type FeaturedKey = {
   matcher: RegExp;
   renderer: FeaturedKeyRenderer;
   uniqPredicate?: (k: string, v: string) => string;
 };
-export type FeaturedKeys = FeaturedKey[];
+type FeaturedKeys = FeaturedKey[];
 
 export const FEATURED_KEYS: FeaturedKeys = [
   {

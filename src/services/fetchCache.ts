@@ -10,7 +10,7 @@ const SESSION_STORAGE_CACHE = {
   clear: () => sessionStorage.clear(), // this is little dirty, but we use sessionStorage only for this
 };
 
-export const LOCAL_STORAGE_CACHE = {
+const LOCAL_STORAGE_CACHE = {
   get: (key: string) => localStorage.getItem(key),
   remove: (key: string) => localStorage.removeItem(key),
   put: (key: string, value: string) => localStorage.setItem(key, value),
@@ -57,7 +57,7 @@ export const getCache = (key: string | false) => {
   }
 };
 
-export const removeFetchCache = (
+const removeFetchCache = (
   url: string,
   opts: Record<string, any> = {},
 ) => {
@@ -80,6 +80,6 @@ export const writeCacheSafe = (key: string | false, value: string) => {
   }
 };
 
-export const clearFetchCache = () => {
+const clearFetchCache = () => {
   fetchCache.clear();
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
-export const addShortcutUnderline = (message: string, shortcut: string) => {
+const addShortcutUnderline = (message: string, shortcut: string) => {
   const shortcutUp = shortcut.toUpperCase();
   const messageUp = message.toUpperCase();
 

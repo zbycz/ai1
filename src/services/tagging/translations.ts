@@ -11,7 +11,7 @@ const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
 
 // TODO download up-to-date or use node_module?
 let translations = {};
-export const fetchSchemaTranslations = async () => {
+const fetchSchemaTranslations = async () => {
   if (translations[intl.lang]) return;
 
   try {
@@ -36,17 +36,17 @@ export const fetchSchemaTranslations = async () => {
   }
 };
 
-export const mockSchemaTranslations = (mockTranslations) => {
+const mockSchemaTranslations = (mockTranslations) => {
   translations = mockTranslations;
 };
 
 export const getPresetTranslation = (key: string): string =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.name ?? `[${key}]`;
 
-export const getPresetTermsTranslation = (key: string) =>
+const getPresetTermsTranslation = (key: string) =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.terms ?? '';
 
-export const getAllTranslations = () => translations?.[intl.lang];
+const getAllTranslations = () => translations?.[intl.lang];
 
 export const getFieldTranslation = (field: Field): FieldTranslation => {
   if (!translations) return undefined;

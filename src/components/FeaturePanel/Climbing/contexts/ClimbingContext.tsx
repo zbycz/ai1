@@ -132,20 +132,20 @@ type ClimbingContextType = {
 };
 
 // @TODO generate?
-export const ClimbingContext = createContext<ClimbingContextType | null>(null);
+const ClimbingContext = createContext<ClimbingContextType | null>(null);
 
 type Props = {
   children: ReactNode;
   feature: Feature;
 };
 
-export const initialPhotoZoom = {
+const initialPhotoZoom = {
   scale: 1,
   positionX: 0,
   positionY: 0,
 };
 
-export const ClimbingContextProvider = ({ children, feature }: Props) => {
+const ClimbingContextProvider = ({ children, feature }: Props) => {
   const initialRoutes = osmToClimbingRoutes(feature);
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);

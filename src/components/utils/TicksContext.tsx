@@ -18,7 +18,7 @@ import { useOsmAuthContext } from './OsmAuthContext';
 
 const QUERY_KEY = ['climbing-ticks'];
 
-export type TicksContextType = {
+type TicksContextType = {
   editedTickId: number | null;
   setEditedTickId: Setter<number | null>;
   addTick: (shortId: string) => Promise<void>;
@@ -41,7 +41,7 @@ const useGetDefaultTickStyle = (): TickStyle => {
   return userSettings['climbing.defaultClimbingStyle'] ?? 'OS';
 };
 
-export const TicksContext = createContext<TicksContextType>(undefined);
+const TicksContext = createContext<TicksContextType>(undefined);
 
 const useMigrateFromLocalStorage = () => {
   // delete this code after 12/2025
@@ -127,7 +127,7 @@ const useClimbingTicksQuery = () => {
 const getIsTicked = (ticks: ClimbingTick[]) => (shortId: string) =>
   ticks.some((tick) => tick.shortId === shortId);
 
-export const TicksProvider: React.FC = ({ children }) => {
+const TicksProvider: React.FC = ({ children }) => {
   const [editedTickId, setEditedTickId] = useState<number | null>(null);
   const { ticks, error, isFetching } = useClimbingTicksQuery();
 

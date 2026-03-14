@@ -6,7 +6,7 @@ import { FetchError } from './helpers';
 // TODO cancel request in map.on('click', ...)
 const abortableQueues: Record<string, AbortController> = {};
 
-export const abortFetch = (queueName: string) => {
+const abortFetch = (queueName: string) => {
   abortableQueues[queueName]?.abort(
     new DOMException(`Aborted by abortFetch(${queueName})`, 'AbortError'),
   );

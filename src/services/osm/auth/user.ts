@@ -7,7 +7,7 @@ export type OsmUser = {
   imageUrl: string;
 };
 
-export const fetchOsmUser = async (): Promise<OsmUser> => {
+const fetchOsmUser = async (): Promise<OsmUser> => {
   const response = await authFetch<string>({
     method: 'GET',
     path: '/api/0.6/user/details.json',

@@ -2,7 +2,7 @@ import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 import { useMediaQuery } from '@mui/material';
 
-export const useToggleState = (
+const useToggleState = (
   initialState: boolean,
 ): [boolean, () => void] => {
   const [value, set] = useState<boolean>(initialState);
@@ -10,7 +10,7 @@ export const useToggleState = (
   return [value, toggle];
 };
 
-export const useBoolState = (
+const useBoolState = (
   initialState: boolean,
 ): [boolean, () => void, () => void] => {
   const [value, set] = useState(initialState);
@@ -19,7 +19,7 @@ export const useBoolState = (
   return [value, setTrue, setFalse];
 };
 
-export const capitalize = (s: string) => s && s[0].toUpperCase() + s.slice(1);
+const capitalize = (s: string) => s && s[0].toUpperCase() + s.slice(1);
 
 export function isBrowser() {
   return typeof window !== 'undefined';
@@ -31,7 +31,7 @@ export function isServer() {
 
 type MapEffect<T extends any[]> = (map: Map, ...rest: T) => void | (() => void);
 
-export const createMapEffectHook =
+const createMapEffectHook =
   <T extends any[]>(mapEffectFn: MapEffect<T>) =>
   (map: Map | undefined, ...rest: T): void =>
     useEffect(() => {
@@ -43,7 +43,7 @@ export const createMapEffectHook =
     }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 type MapEvent = keyof MapEventType;
-export type MapEventHandler<T extends MapEvent> = (
+type MapEventHandler<T extends MapEvent> = (
   ev: MapEventType[T] & Object,
 ) => void;
 type EventDefintionFn<E extends MapEvent, P extends any[]> = (
@@ -51,7 +51,7 @@ type EventDefintionFn<E extends MapEvent, P extends any[]> = (
   ...rest: P
 ) => { eventType: E; eventHandler: MapEventHandler<E> };
 
-export const createMapEventHook =
+const createMapEventHook =
   <E extends MapEvent, P extends any[]>(
     getEventDefinition: EventDefintionFn<E, P>,
   ) =>
@@ -68,10 +68,10 @@ export const createMapEventHook =
       };
     }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
-export const isString = (value: unknown): value is string =>
+const isString = (value: unknown): value is string =>
   typeof value === 'string';
 
-export const slashToOptionalBr = (url: string) =>
+const slashToOptionalBr = (url: string) =>
   url.split('/').map((part, idx) => (
     // eslint-disable-next-line react/no-array-index-key
     <Fragment key={idx}>
@@ -85,7 +85,7 @@ export const slashToOptionalBr = (url: string) =>
     </Fragment>
   ));
 
-export const dotToOptionalBr = (url = '') =>
+const dotToOptionalBr = (url = '') =>
   url.split('.').map((part, idx) => (
     // eslint-disable-next-line react/no-array-index-key
     <Fragment key={idx}>
@@ -99,26 +99,26 @@ export const dotToOptionalBr = (url = '') =>
     </Fragment>
   ));
 
-export const trimText = (text: string, limit: number) =>
+const trimText = (text: string, limit: number) =>
   text?.length > limit ? `${text?.substring(0, limit)}…` : text;
 
 // (<= tablet size) MobileMode shows FeaturePanel in Drawer (instead of side)
-export const isMobileMode = '(max-width: 700px)';
+const isMobileMode = '(max-width: 700px)';
 export const useMobileMode = () => useMediaQuery(isMobileMode);
-export const isMobileModeVanilla = () => window.innerWidth <= 700;
+const isMobileModeVanilla = () => window.innerWidth <= 700;
 
 // (>= mobile size) SearchBox stops growing
-export const isDesktop = '(min-width: 500px)';
+const isDesktop = '(min-width: 500px)';
 
 // TODO refactor breakpoints later
-export const isTabletResolution = '(min-width: 501px)';
-export const isDesktopResolution = '(min-width: 701px)';
+const isTabletResolution = '(min-width: 501px)';
+const isDesktopResolution = '(min-width: 701px)';
 
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
   isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO lets make it isomorphic. Otherwise we have hydration error
 
-export const useIsClient = () => {
+const useIsClient = () => {
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
@@ -126,7 +126,7 @@ export const useIsClient = () => {
   return isClient;
 };
 
-export const DotLoader = () => (
+const DotLoader = () => (
   <>
     <span className="dotloader">.</span>
     <span className="dotloader">.</span>
@@ -135,7 +135,7 @@ export const DotLoader = () => (
 );
 
 // TODO import { NoSsr } from '@mui/base';
-export const ClientOnly = ({ children }) => {
+const ClientOnly = ({ children }) => {
   const isClient = useIsClient();
   return isClient ? children : null;
 };

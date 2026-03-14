@@ -8,7 +8,7 @@ import { getIdFromShortener, getShortenerSlug } from './shortener';
 export const getShortId = ({ id, type }: OsmId): string => `${type[0]}${id}`;
 export const getUrlOsmId = ({ id, type }: OsmId): string => `${type}/${id}`;
 
-export const getReactKey = (feature: Feature) =>
+const getReactKey = (feature: Feature) =>
   getUrlOsmId(feature.osmMeta) +
   '_' +
   (feature.point ? feature.center.join(',') : feature.osmMeta.version);
@@ -19,7 +19,7 @@ export const getApiId = (shortId: string): OsmId => {
   return { type, id };
 };
 
-export const getOsmappLink = (feature: Feature | null) => {
+const getOsmappLink = (feature: Feature | null) => {
   if (!feature.point && feature?.osmMeta?.id)
     return `/${getUrlOsmId(feature.osmMeta)}`;
 
@@ -29,17 +29,17 @@ export const getOsmappLink = (feature: Feature | null) => {
   return '/';
 };
 
-export const getFullOsmappLink = (feature: Feature) =>
+const getFullOsmappLink = (feature: Feature) =>
   `${PROJECT_URL}${getOsmappLink(feature)}`;
 
-export const getShortLink = (feature: Feature) => {
+const getShortLink = (feature: Feature) => {
   const slug = getShortenerSlug(feature.osmMeta);
   return slug === null ? null : `${PROJECT_URL}/${slug}`;
 };
 
 export const prod = process.env.NODE_ENV === 'production';
 
-export const isValidImage = (url): Promise<boolean> => {
+const isValidImage = (url): Promise<boolean> => {
   if (isServer()) {
     return fetch(url).then(
       ({ headers }) => !!headers.get('content-type')?.match(/^image\//),
@@ -55,9 +55,9 @@ export const isValidImage = (url): Promise<boolean> => {
   });
 };
 
-export type ImageSize = { width: number; height: number } | null;
+type ImageSize = { width: number; height: number } | null;
 
-export const getImageSize = (url): Promise<ImageSize> =>
+const getImageSize = (url): Promise<ImageSize> =>
   new Promise((resolve) => {
     const imgElement = new Image();
     imgElement.onload = () =>
@@ -107,7 +107,7 @@ export const buildAddress = (
   );
 };
 
-export const doShortenerRedirect = (ctx) => {
+const doShortenerRedirect = (ctx) => {
   const {
     query: { all },
   } = ctx;

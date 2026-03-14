@@ -5,9 +5,9 @@ export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
 // below ONLY shared types among server + client
 
-export type Tile = { z: number; x: number; y: number };
+type Tile = { z: number; x: number; y: number };
 
-export type ClimbingStatsResponse = {
+type ClimbingStatsResponse = {
   lastRefresh: string;
   osmDataTimestamp: string;
   devStats: Record<string, string | number>;
@@ -17,7 +17,7 @@ export type ClimbingStatsResponse = {
 };
 
 // @see climbingTilesSource#processFeature()
-export type ClimbingTilesProperties = {
+type ClimbingTilesProperties = {
   type: 'area' | 'crag' | 'route' | 'route_top' | 'gym' | 'ferrata';
   name: string;
   label?: string; // computed on FE - processFeature()
@@ -34,7 +34,7 @@ export type ClimbingTilesProperties = {
   color?: string; // computed on FE - processFeature()
 };
 
-export type ClimbingSearchRecord = {
+type ClimbingSearchRecord = {
   type: 'area' | 'crag' | 'gym' | 'ferrata' | 'route' | 'route_top';
   lon: number;
   lat: number;
@@ -43,7 +43,7 @@ export type ClimbingSearchRecord = {
   name: string;
 };
 
-export type ClimbingTilesFeature = GeojsonFeature<
+type ClimbingTilesFeature = GeojsonFeature<
   Geometry,
   ClimbingTilesProperties
 >;

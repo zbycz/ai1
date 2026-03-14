@@ -8,12 +8,12 @@ import React, {
 } from 'react';
 
 type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
-export type ShowToast = (
+type ShowToast = (
   message: string | React.ReactNode,
   severity?: Severity,
   action?: AlertProps['action'],
 ) => void;
-export type SnackbarContextType = {
+type SnackbarContextType = {
   showToast: ShowToast;
 };
 
@@ -33,7 +33,7 @@ type Props = {
 
 // TODO maybe allow more messages ?
 // TODO maybe similar code is already in Mui?  but useSnackbar is configuration only
-export const SnackbarProvider: React.FC<Props> = ({
+const SnackbarProvider: React.FC<Props> = ({
   children,
   initialToast,
 }) => {

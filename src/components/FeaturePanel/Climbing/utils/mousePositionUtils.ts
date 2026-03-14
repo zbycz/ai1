@@ -20,7 +20,7 @@ export const getPositionInImageFromMouse = (
   return posInImage;
 };
 
-export const getMouseFromPositionInImage = (
+const getMouseFromPositionInImage = (
   svgRef: React.MutableRefObject<any>,
   position: PositionPx,
   photoZoom: ZoomState,

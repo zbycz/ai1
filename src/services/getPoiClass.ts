@@ -280,7 +280,7 @@ const rules = [
   // }
 ];
 
-export type PoiClass = {
+type PoiClass = {
   class: string;
   subclass: string;
 };
