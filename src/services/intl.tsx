@@ -27,47 +27,14 @@ const replaceValues = (text: string, values: Values) =>
     return value != null ? `${value}` : '?';
   });
 
-const replaceTags = (text: string, tags?: Values) =>
-  tags
-    ? text.replace(/<(\/?)([a-zA-Z_]+)>/g, (_, end, tagName) => {
-        const tag = `${tags[tagName]}`;
-        if (end) {
-          const endTag = tag.split(' ')[0];
-          return tag ? `</${endTag}>` : '?';
-        }
-        return tag ? `<${tag}>` : '?';
-      })
-    : text;
 
 export const t = (id: TranslationId, values?: Values) => {
   const translation = intl.messages[id] ?? id;
   return replaceValues(translation, values);
 };
 
-interface Props {
-  id: TranslationId;
-  values?: Values;
-  tags?: Values;
-}
 
-const Translation = ({ id, values, tags }: Props) => {
-  const html = replaceTags(t(id, values), tags);
-  return <span data-id={id} dangerouslySetInnerHTML={{ __html: html }} />; // eslint-disable-line react/no-danger
-};
 
-const changeLang = (langId: string) => {
-  if (langId === intl.lang) return;
-  Cookies.set('lang', langId, { expires: 365, path: '/' });
-
-  if (process.env.NEXT_PUBLIC_FAKE_STATIC_EXPORT) {
-    window.location.href = `/${langId}`;
-    return;
-  }
-
-  Router.push(Router.asPath, Router.asPath, { locale: 'default' }).then(() =>
-    Router.reload(),
-  );
-};
 
 const setIntl = (initialIntl: Intl) => {
   if (initialIntl) {
@@ -80,25 +47,12 @@ const setIntl = (initialIntl: Intl) => {
   }
 };
 
-const InjectIntl = ({ intl: globalIntl }) => (
-  <script
-    // eslint-disable-next-line react/no-danger
-    dangerouslySetInnerHTML={{
-      __html: `var GLOBAL_INTL = ${JSON.stringify(globalIntl)};`,
-    }}
-  />
-);
 
 if (isBrowser()) {
   // GLOBAL_INTL is set in _document.tsx
   setIntl((window as any).GLOBAL_INTL);
 }
 
-const setIntlForSSR = async (ctx) => {
-  if (isServer()) {
-    setIntl(await getServerIntl(ctx));
-  }
-};
 
 // We got rid of intl context for easier usage. See commit "Intl: remove intlContext"
 // Only drawback is page refresh while changing language... we can live with that :-)

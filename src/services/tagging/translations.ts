@@ -7,46 +7,15 @@ import { FieldTranslation } from './types/Presets';
 import { getOurTranslations } from './ourPresets';
 
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
-const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
 
 // TODO download up-to-date or use node_module?
 let translations = {};
-const fetchSchemaTranslations = async () => {
-  if (translations[intl.lang]) return;
 
-  try {
-    const presetsPackage = await fetchJson(`${cdnUrl}/package.json`);
-    const { version } = presetsPackage;
-
-    // this request is cached in browser
-    translations = await fetchJson(
-      `${cdnUrl}@${version}/dist/translations/${intl.lang || 'en'}.min.json`,
-    );
-
-    merge(translations, getOurTranslations(intl.lang));
-  } catch (e) {
-    console.log('fetchSchemaTranslations() failed, using local npm', e); // eslint-disable-line no-console
-    const localTranslation = await import(
-      `@openstreetmap/id-tagging-schema/dist/translations/en.min.json`
-    );
-    translations[intl.lang] = localTranslation[intl.lang];
-    merge(translations, getOurTranslations(intl.lang));
-  } finally {
-    publishDbgObject('id-tagging-schema translations', translations);
-  }
-};
-
-const mockSchemaTranslations = (mockTranslations) => {
-  translations = mockTranslations;
-};
 
 export const getPresetTranslation = (key: string): string =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.name ?? `[${key}]`;
 
-const getPresetTermsTranslation = (key: string) =>
-  translations?.[intl.lang]?.presets?.presets?.[key]?.terms ?? '';
 
-const getAllTranslations = () => translations?.[intl.lang];
 
 export const getFieldTranslation = (field: Field): FieldTranslation => {
   if (!translations) return undefined;

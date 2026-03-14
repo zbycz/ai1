@@ -73,10 +73,6 @@ const setProject = (host: string) => {
 };
 
 // server - runs in document getInitialProps()
-const setProjectForSSR = (req: IncomingMessage) => {
-  const { host } = req.headers;
-  setProject(host);
-};
 
 // browser - runs here
 if (isBrowser()) {

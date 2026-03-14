@@ -1,12 +1,9 @@
 // This file is imported by next.config.mjs, keep clean
 
-const SHOW_PROTOTYPE_UI = false;
 
-const DEFAULT_MAP = 'basic';
 
 export const DEBUG_ID_SCHEMA = false;
 
-const DEFAULT_DATA_FORMAT = 'd.M.yy';
 
 export const LANGUAGES = {
   de: 'Deutsch',

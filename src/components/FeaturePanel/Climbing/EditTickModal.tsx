@@ -20,12 +20,6 @@ import { clone } from 'lodash';
 import { TickStyle } from './types';
 import { useTicksContext } from '../../utils/TicksContext';
 
-type EditTickModalProps = {
-  tickId: number;
-  data: ClimbingTick[];
-  isFetching: boolean;
-  onClose: () => void;
-};
 
 const EditTickHeader = (props: { onClose: () => void }) => (
   <AppBar position="static" color="transparent">

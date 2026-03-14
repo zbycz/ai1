@@ -173,32 +173,6 @@ export const gradeColors = {
   '14': { light: '#9C0101', dark: '#690000' },
 };
 
-const useGetSliderColors = (grades: string[]) => {
-  const uniqueGrades = [...new Set(grades)];
-  const g4 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('4-')]);
-  const g6 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('6-')]);
-  const g8 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('8-')]);
-  const g10 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('10-')]);
-
-  const max = uniqueGrades.length;
-  const p4 = Math.round((g4 / max) * 100);
-  const p6 = Math.round((g6 / max) * 100);
-  const p8 = Math.round((g8 / max) * 100);
-  const p10 = Math.round((g10 / max) * 100);
-
-  const skin = useTheme().palette.mode;
-  const color = gradeColors['1-'][skin];
-  const color4 = gradeColors['4-'][skin];
-  const color6 = gradeColors['6-'][skin];
-  const color8 = gradeColors['8-'][skin];
-  const color10 = gradeColors['10-'][skin];
-
-  return `linear-gradient(90deg,
-            ${color} ${p4}%, ${color4} ${p4}%,
-            ${color4} ${p6}%, ${color6} ${p6}%,
-            ${color6} ${p8}%, ${color8} ${p8}%,
-            ${color8} ${p10}%, ${color10} ${p10}%`;
-};
 
 export const csvToArray = (csv: string) => {
   const rows = csv.split('\n');

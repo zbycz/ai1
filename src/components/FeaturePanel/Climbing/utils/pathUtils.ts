@@ -2,25 +2,14 @@ import { boltCodeMap, invertedBoltCodeMap } from './boltCodes';
 import { PathPoint, PathPoints, PointType } from '../types';
 
 type BoltCodeMap = Record<string, PointType>;
-type InvertedBoltCodeMap = Record<PointType, string>;
 
 const B2T = boltCodeMap as BoltCodeMap;
-const T2B = invertedBoltCodeMap as InvertedBoltCodeMap;
 
 const hasTrailingColon = (s: string) => s.includes(':');
 
 const stripTrailingColon = (s: string) =>
   hasTrailingColon(s) ? s.slice(0, -1) : s;
 
-const encodePoint = ({
-  x,
-  y,
-  type,
-}: {
-  x: number;
-  y: number;
-  type?: PointType;
-}) => `${x},${y}${type ? T2B[type] : ''}`;
 
 const decodePointToken = (token: string): PathPoint => {
   const [xStr, yWithMaybeCode = ''] = token.split(',', 2);
@@ -64,17 +53,6 @@ const applyLineTypes =
           },
     );
 
-const stringifyPath = (path: PathPoints): string | undefined => {
-  if (!path || path.length === 0) return undefined;
-
-  const head = encodePoint(path[0]);
-  const tail = path
-    .slice(1)
-    .map((p) => (p.previousLineType === 'dotted' ? ':|' : '|') + encodePoint(p))
-    .join('');
-
-  return head + tail;
-};
 
 export const parsePathString = (pathString?: string): PathPoints => {
   if (!pathString) return [];

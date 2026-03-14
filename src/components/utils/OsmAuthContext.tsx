@@ -16,43 +16,8 @@ type OsmAuthType = {
   handleLogout: () => void;
 };
 
-const useOsmUserState = (cookies) => {
-  const initialState = cookies[OSM_USER_COOKIE];
-  return useState<OsmUser | undefined>(initialState);
-};
 
 const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
-const OsmAuthProvider = ({ children, cookies }) => {
-  const [loading, setLoading] = useState(false);
-  const [osmUser, setOsmUser] = useOsmUserState(cookies);
-
-  const { showToast } = useSnackbar();
-
-  const successfulLogin = (user: OsmUser) => {
-    setOsmUser(user);
-    showToast(`Logged in as ${user.name}`, 'success');
-    setLoading(false);
-  };
-
-  const handleLogin = () => {
-    setLoading(true);
-    loginAndfetchOsmUser().then(successfulLogin);
-  };
-  const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
-
-  const value: OsmAuthType = {
-    loggedIn: !!osmUser,
-    osmUser: osmUser?.name || '', // TODO rename
-    userImage: osmUser?.imageUrl || '',
-    loading,
-    handleLogin,
-    handleLogout,
-  };
-
-  return (
-    <OsmAuthContext.Provider value={value}>{children}</OsmAuthContext.Provider>
-  );
-};
 
 export const useOsmAuthContext = () => useContext(OsmAuthContext);

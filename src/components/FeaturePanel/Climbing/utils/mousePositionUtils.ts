@@ -20,20 +20,3 @@ export const getPositionInImageFromMouse = (
   return posInImage;
 };
 
-const getMouseFromPositionInImage = (
-  svgRef: React.MutableRefObject<any>,
-  position: PositionPx,
-  photoZoom: ZoomState,
-) => {
-  if (svgRef.current === null || !position) {
-    return null;
-  }
-
-  const imageRect = svgRef.current.getBoundingClientRect();
-
-  return {
-    x: position.x * photoZoom.scale + imageRect.x,
-    y: position.y * photoZoom.scale + imageRect.y,
-    units: 'px',
-  };
-};

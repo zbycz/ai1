@@ -27,12 +27,6 @@ type ImageDefFromCenter = {
   center: LonLat;
 };
 type ImageDef = ImageDefFromTag | ImageDefFromCenter;
-const isCenter = (def: ImageDef): def is ImageDefFromCenter =>
-  def?.type === 'center';
-const isTag = (def: ImageDef): def is ImageDefFromTag =>
-  def?.type === 'tag';
-const isInstant = (def: ImageDef): def is ImageDefFromTag =>
-  isTag(def) && def.instant;
 
 // coordinates in geojson format: [lon, lat] = [x,y]
 export type LonLat = [number, number];
@@ -56,16 +50,6 @@ interface GeometryCollection {
 
 type FeatureGeometry = Point | LineString | GeometryCollection | Polygon;
 
-const isPoint = (geometry: FeatureGeometry): geometry is Point =>
-  geometry?.type === 'Point';
-const isLineString = (
-  geometry: FeatureGeometry,
-): geometry is LineString => geometry?.type === 'LineString';
-const isGeometryCollection = (
-  geometry: FeatureGeometry,
-): geometry is GeometryCollection => geometry?.type === 'GeometryCollection';
-const isPolygon = (geometry: FeatureGeometry): geometry is Polygon =>
-  geometry?.type === 'Polygon';
 
 export type FeatureTags = {
   [key: string]: string;
@@ -131,9 +115,3 @@ export type Feature = {
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
 
-type SuccessInfo = {
-  type: 'note' | 'edit';
-  text: string;
-  url: string;
-  redirect?: string;
-};

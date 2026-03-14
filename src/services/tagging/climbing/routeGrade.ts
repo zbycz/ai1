@@ -8,10 +8,6 @@ import {
 import { DEFAULT_GRADE_SYSTEM, GradeSystem } from './gradeSystems';
 import { FeatureTags } from '../../types';
 
-const exportGradeDataToWikiTable = () => {
-  const csvArray = csvToArray(gradeTableString);
-  return csvArray.map((row) => `|${row.join('\n|')}`).join('\n|-\n');
-};
 
 // @TODO use memo for this function?
 const convertGrade = (
@@ -54,8 +50,6 @@ export const getDifficulty = (
 
   return undefined;
 };
-const getOsmTagFromGradeSystem = (gradeSystemKey: GradeSystem) =>
-  `climbing:grade:${gradeSystemKey}`;
 
 const getGradeSystemFromOsmTag = (osmTagKey: string) =>
   osmTagKey.split(':', 3)[2];
@@ -127,21 +121,4 @@ export const findOrConvertRouteGrade = (
   };
 };
 
-const extractClimbingGradeFromTagName = (
-  value: string,
-): string | null => {
-  const match = value.match(/^climbing:grade:([^:]+)/);
-  return match ? match[1] : null;
-};
 
-const getGradeIndexFromTags = (
-  tags: FeatureTags,
-): number | undefined => {
-  const grade = getDifficulty(tags);
-  if (!grade) return undefined;
-
-  const table = GRADE_TABLE[grade.gradeSystem];
-  if (!table) return undefined;
-
-  return table.indexOf(grade.grade);
-};

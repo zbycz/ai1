@@ -7,10 +7,6 @@ import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 import { MouseTrackingLine } from './MouseTrackingLine';
 import { RouteLine } from './RouteLine';
 
-const InteractiveRectangle = styled.line`
-  pointer-events: all;
-  stroke-linecap: round;
-`;
 
 const NewMidpoint = styled.circle`
   pointer-events: none;

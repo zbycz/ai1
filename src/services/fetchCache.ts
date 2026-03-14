@@ -57,15 +57,6 @@ export const getCache = (key: string | false) => {
   }
 };
 
-const removeFetchCache = (
-  url: string,
-  opts: Record<string, any> = {},
-) => {
-  const key = getKey(url, opts);
-  if (key) {
-    fetchCache.remove(key);
-  }
-};
 
 export const writeCacheSafe = (key: string | false, value: string) => {
   if (!key) return;
@@ -80,6 +71,3 @@ export const writeCacheSafe = (key: string | false, value: string) => {
   }
 };
 
-const clearFetchCache = () => {
-  fetchCache.clear();
-};

@@ -98,9 +98,6 @@ export type Presets = {
   [presetKey: string]: Preset;
 };
 
-type RawPresets = {
-  [presetKey: string]: Omit<Preset, 'presetKey'>;
-};
 
 export type FieldTranslation = {
   label: string;

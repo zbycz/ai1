@@ -34,8 +34,6 @@ const resolveParents = (preset: Preset, type: FieldType): string[] => {
 const resolveFieldKeys = (preset: Preset, fieldType: FieldType) =>
   resolveLinks(resolveParents(preset, fieldType), fieldType);
 
-const resolveFields = (preset: Preset, fieldType: FieldType): Field[] =>
-  resolveFieldKeys(preset, fieldType).map((key) => allFields[key]);
 
 const getUniversalFields = (): Field[] =>
   Object.values(allFields).filter((f) => f.universal);
@@ -56,30 +54,8 @@ export const getFieldKeys = (preset: Preset): string[] => {
   return deduplicate(allFieldKeys);
 };
 
-const translateFields = (fields: Field[]): Field[] =>
-  fields.map((field) => {
-    const fieldTranslation = getFieldTranslation(field);
-    return {
-      ...field,
-      fieldTranslation: { label: `[${field.fieldKey}]`, ...fieldTranslation },
-    };
-  });
 
-const eatPreset = (preset: Preset, fields: Field[]) => {
-  return fields.filter((field) => !preset.tags[field.key]);
-};
 
-const getFields = (preset: Preset) => {
-  const fields = resolveFields(preset, 'fields');
-  const moreFields = resolveFields(preset, 'moreFields');
-  const universalFields = getUniversalFields();
-
-  return {
-    fields: eatPreset(preset, translateFields(fields)),
-    moreFields: translateFields(moreFields),
-    universalFields: translateFields(universalFields),
-  };
-};
 
 const translateField = (
   fieldTranslation: FieldTranslation | undefined,

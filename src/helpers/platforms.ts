@@ -13,11 +13,4 @@ export const isIOS = () =>
     // iPad on iOS 13 detection
     (navigator.userAgent.includes('Mac') && 'ontouchend' in document));
 
-const isAndroid = () =>
-  isBrowser() && navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
-const getPlatform = () => {
-  if (isIOS()) return 'ios';
-  if (isAndroid()) return 'android';
-  return 'desktop';
-};
