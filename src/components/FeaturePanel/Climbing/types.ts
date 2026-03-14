@@ -62,9 +62,3 @@ export type TickStyle =
   | null;
 
 /** @deprecated use ClimbingTick type */
-export type LocalStorageTick = {
-  osmId: string;
-  style: TickStyle;
-  date: string;
-  key?: string;
-};

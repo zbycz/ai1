@@ -1,10 +1,8 @@
 import { RouteDifficulty } from '../../../components/FeaturePanel/Climbing/types';
 import {
-  csvToArray,
   GRADE_TABLE,
   gradeColors,
-  gradeTableString,
-} from './gradeData';
+  } from './gradeData';
 import { DEFAULT_GRADE_SYSTEM, GradeSystem } from './gradeSystems';
 import { FeatureTags } from '../../types';
 

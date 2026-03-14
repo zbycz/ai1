@@ -1,5 +1,3 @@
-import React, { Fragment, useCallback, useEffect, useState } from 'react';
-import { Map, MapEventType } from 'maplibre-gl';
 import { useMediaQuery } from '@mui/material';
 
 
@@ -30,8 +28,6 @@ export const useMobileMode = () => useMediaQuery(isMobileMode);
 // TODO refactor breakpoints later
 
 // is mobile device - specific behaviour like longpress or geouri
-export const isMobileDevice = () =>
-  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO lets make it isomorphic. Otherwise we have hydration error
 
 
 

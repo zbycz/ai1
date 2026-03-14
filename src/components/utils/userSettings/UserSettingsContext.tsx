@@ -1,22 +1,17 @@
 import React, { createContext, useContext } from 'react';
-import { usePersistedState } from '../usePersistedState';
 import {
-  GRADE_SYSTEMS,
   GradeSystem,
 } from '../../../services/tagging/climbing/gradeSystems';
 import { TickStyle } from '../../FeaturePanel/Climbing/types';
-import { isMobileDevice } from '../../helpers';
 import {
   ClimbingFilter,
   ClimbingFilterSettings,
-  getClimbingFilter,
-} from './getClimbingFilter';
+  } from './getClimbingFilter';
 import { Setter } from '../../../types';
-import { getGradeSystem } from './getGradeSystem';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
-export type UserSettingsType = Partial<{
+type UserSettingsType = Partial<{
   isImperial: boolean;
   'weather.enabled': boolean;
   'climbing.gradeSystem': GradeSystem;
@@ -31,7 +26,7 @@ export type UserSettingsType = Partial<{
   'climbing.filter': ClimbingFilterSettings;
 }>;
 
-export type UserSettingsContextType = {
+type UserSettingsContextType = {
   userSettings: UserSettingsType;
   setUserSettings: Setter<UserSettingsType>;
   setUserSetting: <T extends keyof UserSettingsType>(

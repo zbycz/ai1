@@ -43,31 +43,7 @@ if (fetchCache === LOCAL_STORAGE_CACHE) {
   console.warn('Using store_requests_to_local_storage !!'); // eslint-disable-line no-console
 }
 
-export const getKey = (url: string, opts: Record<string, any>) => {
-  if (['POST', 'PUT', 'DELETE'].includes(opts.method)) {
-    return false;
-  }
-
-  return url + JSON.stringify(opts);
-};
-
-export const getCache = (key: string | false) => {
-  if (key) {
-    return fetchCache.get(key); // important: this is string, so we are getting fresh object via JSON.parse() everytime
-  }
-};
 
 
-export const writeCacheSafe = (key: string | false, value: string) => {
-  if (!key) return;
 
-  try {
-    fetchCache.put(key, value);
-  } catch (e) {
-    if (e.message.includes('exceeded the quota')) {
-      fetchCache.clear();
-    }
-    console.warn(`Item ${key} was not saved to cache: `, e); // eslint-disable-line no-console
-  }
-};
 

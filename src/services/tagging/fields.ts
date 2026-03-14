@@ -2,7 +2,6 @@ import { FieldTranslation, Preset } from './types/Presets';
 import { allFields, allPresets } from './data';
 import { deduplicate } from './utils';
 import { Field } from './types/Fields';
-import { getFieldTranslation } from './translations';
 
 type FieldType = 'fields' | 'moreFields';
 

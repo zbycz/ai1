@@ -2,7 +2,6 @@
 import { publishDbgObject } from '../utils';
 import { isBrowser } from '../components/helpers';
 import type { TranslationId } from './types';
-import { IncomingMessage } from 'node:http';
 
 type Project = {
   id: string;
@@ -52,9 +51,9 @@ const forceProjectHost = process.env.NEXT_PUBLIC_FORCE_PROJECT;
 const forcedProject = forceProjectHost ? domains[forceProjectHost] : undefined;
 
 // Globals
-export let PROJECT_ID = 'error: PROJECT not set';
+let PROJECT_ID = 'error: PROJECT not set';
 let PROJECT_NAME = 'error: PROJECT not set';
-export let PROJECT_URL = 'error: PROJECT not set';
+let PROJECT_URL = 'error: PROJECT not set';
 let PROJECT_OG_IMAGE = 'error: PROJECT not set';
 let PROJECT_DECRIPTION = 'error: PROJECT not set' as TranslationId;
 let PROJECT_SERP_DESCRIPTION = 'error: PROJECT not set' as TranslationId;

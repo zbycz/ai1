@@ -1,11 +1,7 @@
 import React, {
   createContext,
-  ReactNode,
-  useCallback,
   useContext,
-  useRef,
-  useState,
-} from 'react';
+  } from 'react';
 import {
   ClimbingRoute,
   PathPoint,
@@ -15,19 +11,11 @@ import {
   Size,
   ZoomState,
 } from '../types';
-import { updateElementOnIndex } from '../utils/array';
-import { findCloserPointFactory } from '../utils/findCloserPoint';
 import {
   ActionWithCallback,
   State,
   StateAction,
-  useStateMachine,
-} from '../utils/useStateMachine';
-import { positionUtilsFactory } from '../utils/positionUtilsFactory';
-import { Feature } from '../../../../services/types';
-import { osmToClimbingRoutes } from './osmToClimbingRoutes';
-import { publishDbgObject } from '../../../../utils';
-import { getContainedSizeImage } from '../utils/image';
+  } from '../utils/useStateMachine';
 import { Setter } from '../../../../types';
 
 type LoadedPhotos = Record<string, Record<number, boolean>>;

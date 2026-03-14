@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import { GRADE_SYSTEMS, GradeSystem } from './gradeSystems';
 
 type GradeTable = Record<GradeSystem, Array<string>>;
@@ -9,7 +8,7 @@ type GradeTable = Record<GradeSystem, Array<string>>;
 // UIAA                        YDS                     UK ADJ                    WI
 //       French                        V Grade                 FB                       Mixed
 //               Saxon                          UK Tech                 Norwegian               Polish
-export const gradeTableString = `UIAA|Germany, French, Saxon|Swiss, YDS|YDS_class, V Grade, UK Tech, UK ADJ, FB|French British, Norwegian|Scandinavian, WI, Mixed
+const gradeTableString = `UIAA|Germany, French, Saxon|Swiss, YDS|YDS_class, V Grade, UK Tech, UK ADJ, FB|French British, Norwegian|Scandinavian, WI, Mixed
 1-,      1,      I,            4,        VB-,     1,     M,      1,       1-,       WI2,   M2,     I-
 1,       1,      I,            5,        VB-,     1,     M,      1,       1,        WI2,   M2,     I
 1+,      1,      I,            5.0,      VB-,     1,     M,      1,       1+,       WI2,   M2,     I+
@@ -174,7 +173,7 @@ export const gradeColors = {
 };
 
 
-export const csvToArray = (csv: string) => {
+const csvToArray = (csv: string) => {
   const rows = csv.split('\n');
   const data = rows.slice(1);
   return data.map((dataRow) => {

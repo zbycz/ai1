@@ -5,7 +5,6 @@ import { allFields } from './data';
 import { getFieldKeys, getValueForField } from './fields';
 import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
-import { getShortId } from '../helpers';
 import { Field } from './types/Fields';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
 import { FEATURED_KEYS } from './featuredKeys';

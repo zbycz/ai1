@@ -1,15 +1,13 @@
 import React from 'react';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
-import { MessagesType, TranslationId } from './types';
-import { isBrowser, isServer } from '../components/helpers';
-import { getServerIntl } from './intlServer';
+import { MessagesType } from './types';
+import { isBrowser } from '../components/helpers';
 import { publishDbgObject } from '../utils';
 import { LANGUAGES } from '../config.mjs';
 
-type Values = { [variable: string]: string | number };
 
-export interface Intl {
+interface Intl {
   lang: string;
   messages: MessagesType | {};
 }
@@ -19,19 +17,9 @@ export const intl: Intl = {
   messages: {},
 };
 
-const VARIABLE_REGEX = /__([a-zA-Z_]+)__/g;
-
-const replaceValues = (text: string, values: Values) =>
-  text.replace(VARIABLE_REGEX, (_, variableName) => {
-    const value = values && values[variableName];
-    return value != null ? `${value}` : '?';
-  });
 
 
-export const t = (id: TranslationId, values?: Values) => {
-  const translation = intl.messages[id] ?? id;
-  return replaceValues(translation, values);
-};
+
 
 
 

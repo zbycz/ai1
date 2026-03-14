@@ -1,12 +1,8 @@
-import { FeatureTags } from '../../../../services/types';
-import { isIOS } from '../../../../helpers/platforms';
-import { naturalSort } from './array';
 
 // @TODO move file outside of climbing
 
 
 
-export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 
 
 

@@ -29,9 +29,8 @@ type ImageDefFromCenter = {
 type ImageDef = ImageDefFromTag | ImageDefFromCenter;
 
 // coordinates in geojson format: [lon, lat] = [x,y]
-export type LonLat = [number, number];
-export type LonLatRounded = [string, string];
-export type LonLatBoth = LonLat | LonLatRounded;
+type LonLat = [number, number];
+type LonLatRounded = [string, string];
 
 interface Point {
   type: 'Point';

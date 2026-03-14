@@ -1,5 +1,3 @@
-import { Feature as GeojsonFeature, Geometry } from 'geojson';
-import { OsmType } from './services/types';
 
 export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -22,7 +20,3 @@ export type ClimbingTick = {
   pairing: Record<string, string> | null;
 };
 
-export type ClimbingTickDb = Omit<ClimbingTick, 'shortId'> & {
-  osmType: string | null;
-  osmId: number | null;
-};

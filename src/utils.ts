@@ -1,10 +1,3 @@
-import {
-  Feature,
-  FeatureTags,
-  LonLat,
-  LonLatRounded,
-  LonLatBoth,
-} from './services/types';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 
@@ -18,10 +11,8 @@ import {
 // const metersPerPxOnEquator = 156543.03392
 // const mPerPx = metersPerPxOnEquator * Math.cos(lat * Math.PI / 180) / Math.pow(2, zoom)
 
-export const roundedToDegUrl = ([lon, lat]: LonLatRounded) => `${lat},${lon}`;
 
 
-export const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
 
 export const publishDbgObject = (key, value) => {
   if (typeof window !== 'undefined') {

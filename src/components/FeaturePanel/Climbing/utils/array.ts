@@ -15,15 +15,4 @@ export const updateElementOnIndex = <T>(
 
 
 
-const naturalCompare = (a, b) => {
-  return a?.localeCompare(b, undefined, {
-    numeric: true,
-    sensitivity: 'base',
-  });
-};
 
-export const naturalSort = (array, reducer = (item) => item) => {
-  return array.sort((a, b) => {
-    return naturalCompare(reducer(a), reducer(b));
-  });
-};
