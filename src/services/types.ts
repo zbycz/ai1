@@ -8,12 +8,12 @@ export type OsmId = {
   id: number; // negative value means new feature (to be added)
 };
 
-type PathType = { x: number; y: number; suffix: string }[];
-type MemberPath = {
+export type PathType = { x: number; y: number; suffix: string }[];
+export type MemberPath = {
   path: PathType;
   member: Feature;
 };
-type ImageDefFromTag = {
+export type ImageDefFromTag = {
   type: 'tag';
   k: string;
   v: string;
@@ -21,46 +21,63 @@ type ImageDefFromTag = {
   path?: PathType;
   memberPaths?: MemberPath[]; // merged on relation
 };
-type ImageDefFromCenter = {
+export type ImageDefFromCenter = {
   type: 'center';
   service: 'mapillary' | 'fody' | 'kartaview' | 'panoramax';
   center: LonLat;
 };
-type ImageDef = ImageDefFromTag | ImageDefFromCenter;
+export type ImageDef = ImageDefFromTag | ImageDefFromCenter;
+export const isCenter = (def: ImageDef): def is ImageDefFromCenter =>
+  def?.type === 'center';
+export const isTag = (def: ImageDef): def is ImageDefFromTag =>
+  def?.type === 'tag';
+export const isInstant = (def: ImageDef): def is ImageDefFromTag =>
+  isTag(def) && def.instant;
 
 // coordinates in geojson format: [lon, lat] = [x,y]
-type LonLat = [number, number];
-type LonLatRounded = [string, string];
+export type LonLat = [number, number];
+export type LonLatRounded = [string, string];
+export type LonLatBoth = LonLat | LonLatRounded;
 
-interface Point {
+export interface Point {
   type: 'Point';
   coordinates: LonLat;
 }
 
-interface LineString {
+export interface LineString {
   type: 'LineString';
   coordinates: LonLat[];
 }
 
-interface GeometryCollection {
+export interface GeometryCollection {
   type: 'GeometryCollection';
   geometries: Array<Point | LineString | GeometryCollection | Polygon>;
 }
 
-type FeatureGeometry = Point | LineString | GeometryCollection | Polygon;
+export type FeatureGeometry = Point | LineString | GeometryCollection | Polygon;
 
+export const isPoint = (geometry: FeatureGeometry): geometry is Point =>
+  geometry?.type === 'Point';
+export const isLineString = (
+  geometry: FeatureGeometry,
+): geometry is LineString => geometry?.type === 'LineString';
+export const isGeometryCollection = (
+  geometry: FeatureGeometry,
+): geometry is GeometryCollection => geometry?.type === 'GeometryCollection';
+export const isPolygon = (geometry: FeatureGeometry): geometry is Polygon =>
+  geometry?.type === 'Polygon';
 
 export type FeatureTags = {
   [key: string]: string;
 };
 
-type RelationMember = {
+export type RelationMember = {
   type: OsmType;
   ref: number;
   role: string;
 };
 
-type FeatureProperties = {
+export type FeatureProperties = {
   class: string;
   subclass: string;
   [key: string]: string | number | boolean;
@@ -114,3 +131,9 @@ export type Feature = {
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
 
+export type SuccessInfo = {
+  type: 'note' | 'edit';
+  text: string;
+  url: string;
+  redirect?: string;
+};
