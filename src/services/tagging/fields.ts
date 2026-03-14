@@ -2,7 +2,6 @@ import { FieldTranslation, Preset } from './types/Presets';
 import { allFields, allPresets } from './data';
 import { deduplicate } from './utils';
 import { Field } from './types/Fields';
-import { getFieldTranslation } from './translations';
 
 type FieldType = 'fields' | 'moreFields';
 
@@ -34,8 +33,6 @@ const resolveParents = (preset: Preset, type: FieldType): string[] => {
 const resolveFieldKeys = (preset: Preset, fieldType: FieldType) =>
   resolveLinks(resolveParents(preset, fieldType), fieldType);
 
-const resolveFields = (preset: Preset, fieldType: FieldType): Field[] =>
-  resolveFieldKeys(preset, fieldType).map((key) => allFields[key]);
 
 const getUniversalFields = (): Field[] =>
   Object.values(allFields).filter((f) => f.universal);
@@ -56,32 +53,10 @@ export const getFieldKeys = (preset: Preset): string[] => {
   return deduplicate(allFieldKeys);
 };
 
-const translateFields = (fields: Field[]): Field[] =>
-  fields.map((field) => {
-    const fieldTranslation = getFieldTranslation(field);
-    return {
-      ...field,
-      fieldTranslation: { label: `[${field.fieldKey}]`, ...fieldTranslation },
-    };
-  });
 
-const eatPreset = (preset: Preset, fields: Field[]) => {
-  return fields.filter((field) => !preset.tags[field.key]);
-};
 
-export const getFields = (preset: Preset) => {
-  const fields = resolveFields(preset, 'fields');
-  const moreFields = resolveFields(preset, 'moreFields');
-  const universalFields = getUniversalFields();
 
-  return {
-    fields: eatPreset(preset, translateFields(fields)),
-    moreFields: translateFields(moreFields),
-    universalFields: translateFields(universalFields),
-  };
-};
-
-export const translateField = (
+const translateField = (
   fieldTranslation: FieldTranslation | undefined,
   v: string,
 ): string => {

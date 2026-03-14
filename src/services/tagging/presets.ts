@@ -52,25 +52,7 @@ const index = {
   relation: [],
 };
 
-const osmTypeToGeometries = (osmType: string): Preset['geometry'] => {
-  if (osmType === 'node') {
-    return ['point'];
-  } else if (osmType === 'way') {
-    return ['line', 'area'];
-  } else if (osmType === 'relation') {
-    return ['relation'];
-  }
 
-  return ['point'];
-};
-
-export const geometryMatchesOsmType = (
-  presetGeometry: Preset['geometry'],
-  osmType: OsmType,
-) =>
-  osmTypeToGeometries(osmType).some((geometry) =>
-    presetGeometry.includes(geometry),
-  );
 
 // build an index by geometry type
 Object.values(allPresets).forEach((preset) => {
@@ -98,7 +80,7 @@ Object.values(allPresets).forEach((preset) => {
 
 // inspired by _this.matchTags() in iD codebase
 // takes ~1ms
-export const findPreset = (type: OsmType, tags: FeatureTags): Preset => {
+const findPreset = (type: OsmType, tags: FeatureTags): Preset => {
   const candidates = [];
 
   index[type].forEach((candidate) => {

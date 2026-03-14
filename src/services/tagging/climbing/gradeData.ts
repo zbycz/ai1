@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import { GRADE_SYSTEMS, GradeSystem } from './gradeSystems';
 
 type GradeTable = Record<GradeSystem, Array<string>>;
@@ -9,7 +8,7 @@ type GradeTable = Record<GradeSystem, Array<string>>;
 // UIAA                        YDS                     UK ADJ                    WI
 //       French                        V Grade                 FB                       Mixed
 //               Saxon                          UK Tech                 Norwegian               Polish
-export const gradeTableString = `UIAA|Germany, French, Saxon|Swiss, YDS|YDS_class, V Grade, UK Tech, UK ADJ, FB|French British, Norwegian|Scandinavian, WI, Mixed
+const gradeTableString = `UIAA|Germany, French, Saxon|Swiss, YDS|YDS_class, V Grade, UK Tech, UK ADJ, FB|French British, Norwegian|Scandinavian, WI, Mixed
 1-,      1,      I,            4,        VB-,     1,     M,      1,       1-,       WI2,   M2,     I-
 1,       1,      I,            5,        VB-,     1,     M,      1,       1,        WI2,   M2,     I
 1+,      1,      I,            5.0,      VB-,     1,     M,      1,       1+,       WI2,   M2,     I+
@@ -173,34 +172,8 @@ export const gradeColors = {
   '14': { light: '#9C0101', dark: '#690000' },
 };
 
-export const useGetSliderColors = (grades: string[]) => {
-  const uniqueGrades = [...new Set(grades)];
-  const g4 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('4-')]);
-  const g6 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('6-')]);
-  const g8 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('8-')]);
-  const g10 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('10-')]);
 
-  const max = uniqueGrades.length;
-  const p4 = Math.round((g4 / max) * 100);
-  const p6 = Math.round((g6 / max) * 100);
-  const p8 = Math.round((g8 / max) * 100);
-  const p10 = Math.round((g10 / max) * 100);
-
-  const skin = useTheme().palette.mode;
-  const color = gradeColors['1-'][skin];
-  const color4 = gradeColors['4-'][skin];
-  const color6 = gradeColors['6-'][skin];
-  const color8 = gradeColors['8-'][skin];
-  const color10 = gradeColors['10-'][skin];
-
-  return `linear-gradient(90deg,
-            ${color} ${p4}%, ${color4} ${p4}%,
-            ${color4} ${p6}%, ${color6} ${p6}%,
-            ${color6} ${p8}%, ${color8} ${p8}%,
-            ${color8} ${p10}%, ${color10} ${p10}%`;
-};
-
-export const csvToArray = (csv: string) => {
+const csvToArray = (csv: string) => {
   const rows = csv.split('\n');
   const data = rows.slice(1);
   return data.map((dataRow) => {
@@ -209,10 +182,10 @@ export const csvToArray = (csv: string) => {
   });
 };
 
-export const transposeArrays = (t: Array<Array<any>>) =>
+const transposeArrays = (t: Array<Array<any>>) =>
   t[0].map((_, colIndex) => t.map((row) => row[colIndex]));
 
-export const getCsvGradeData = (): GradeTable => {
+const getCsvGradeData = (): GradeTable => {
   const transposedTable = transposeArrays(csvToArray(gradeTableString));
 
   return transposedTable.reduce(

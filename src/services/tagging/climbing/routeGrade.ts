@@ -1,20 +1,14 @@
 import { RouteDifficulty } from '../../../components/FeaturePanel/Climbing/types';
 import {
-  csvToArray,
   GRADE_TABLE,
   gradeColors,
-  gradeTableString,
-} from './gradeData';
+  } from './gradeData';
 import { DEFAULT_GRADE_SYSTEM, GradeSystem } from './gradeSystems';
 import { FeatureTags } from '../../types';
 
-export const exportGradeDataToWikiTable = () => {
-  const csvArray = csvToArray(gradeTableString);
-  return csvArray.map((row) => `|${row.join('\n|')}`).join('\n|-\n');
-};
 
 // @TODO use memo for this function?
-export const convertGrade = (
+const convertGrade = (
   from: GradeSystem,
   to: GradeSystem,
   value: string,
@@ -54,10 +48,8 @@ export const getDifficulty = (
 
   return undefined;
 };
-export const getOsmTagFromGradeSystem = (gradeSystemKey: GradeSystem) =>
-  `climbing:grade:${gradeSystemKey}`;
 
-export const getGradeSystemFromOsmTag = (osmTagKey: string) =>
+const getGradeSystemFromOsmTag = (osmTagKey: string) =>
   osmTagKey.split(':', 3)[2];
 
 export const getDifficulties = (tags: FeatureTags): RouteDifficulty[] => {
@@ -75,7 +67,7 @@ export const getDifficulties = (tags: FeatureTags): RouteDifficulty[] => {
   }));
 };
 
-export const sanitizeApproximationSymbol = (grade) => {
+const sanitizeApproximationSymbol = (grade) => {
   return grade?.replace('~', '');
 };
 
@@ -127,21 +119,4 @@ export const findOrConvertRouteGrade = (
   };
 };
 
-export const extractClimbingGradeFromTagName = (
-  value: string,
-): string | null => {
-  const match = value.match(/^climbing:grade:([^:]+)/);
-  return match ? match[1] : null;
-};
 
-export const getGradeIndexFromTags = (
-  tags: FeatureTags,
-): number | undefined => {
-  const grade = getDifficulty(tags);
-  if (!grade) return undefined;
-
-  const table = GRADE_TABLE[grade.gradeSystem];
-  if (!table) return undefined;
-
-  return table.indexOf(grade.grade);
-};

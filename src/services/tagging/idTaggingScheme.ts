@@ -5,7 +5,6 @@ import { allFields } from './data';
 import { getFieldKeys, getValueForField } from './fields';
 import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
-import { getShortId } from '../helpers';
 import { Field } from './types/Fields';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
 import { FEATURED_KEYS } from './featuredKeys';
@@ -140,15 +139,3 @@ export const getSchemaForFeature = (feature: Feature) => {
   };
 };
 
-export const addSchemaToFeature = (feature: Feature): Feature => {
-  let schema;
-  try {
-    schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
-  } catch (e) {
-    // TODO sentry
-    console.error(`getSchemaForFeature(${getShortId(feature.osmMeta)}):`, e); // eslint-disable-line no-console
-    return feature;
-  }
-
-  return { ...feature, schema };
-};
