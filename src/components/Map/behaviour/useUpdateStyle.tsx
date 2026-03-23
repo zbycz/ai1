@@ -6,6 +6,7 @@ import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { createMapEffectHook } from '../../helpers';
 import { basicStyle } from '../styles/basicStyle';
 import { outdoorStyle } from '../styles/outdoorStyle';
+import { maptilerBasicStyle } from '../styles/maptilerBasicStyle';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { getRasterStyle } from '../styles/rasterStyle';
 import { DEFAULT_MAP } from '../../../config.mjs';
@@ -43,6 +44,9 @@ const ofrBasicStyle = {
 const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
   if (key === 'basic') {
     return basicStyle;
+  }
+  if (key === 'maptilerBasic') {
+    return maptilerBasicStyle;
   }
   if (key === 'basicOfr') {
     return ofrBasicStyle;

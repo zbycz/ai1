@@ -52,6 +52,12 @@ export const osmappLayers: Layers = {
     Icon: ExploreIcon,
     attribution: ['maptiler', 'osm'],
   },
+  maptilerBasic: {
+    name: `${t('layers.basic')} Maptiler v2`,
+    type: 'basemap',
+    Icon: ExploreIcon,
+    attribution: ['maptiler', 'osm'],
+  },
   basicOfr: {
     name: `${t('layers.basic')} OpenFreeMap`,
     type: 'basemap',
