@@ -112,7 +112,7 @@ export type Feature = {
   parentFeatures?: Feature[];
   imageDefs?: ImageDef[];
   properties: FeatureProperties;
-  center: LonLat;
+  center?: LonLat;
   countryCode?: string; // ISO3166-1 code lowercase, undefined = no country
   roundedCenter?: LonLatRounded;
   error?: 'network' | 'unknown' | '404' | '500'; // etc.

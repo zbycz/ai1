@@ -52,37 +52,19 @@ describe('fetchFeature', () => {
     expect(feature).toEqual(NODE_FEATURE);
   });
 
-  const OVERPASS_CENTER_RESPONSE = {
-    elements: [{ center: { lat: 50, lon: 14 } }],
-  };
-
   it('should work for way', async () => {
-    const fetchJson = jest
-      .spyOn(fetch, 'fetchJson')
-      .mockImplementation((url) =>
-        Promise.resolve(url.match(/overpass/) ? OVERPASS_CENTER_RESPONSE : WAY),
-      );
+    const fetchJson = jest.spyOn(fetch, 'fetchJson').mockResolvedValue(WAY);
 
     const feature = await fetchFeature({ type: 'way', id: 51050330 });
-    expect(fetchJson).toHaveBeenCalledTimes(2);
+    expect(fetchJson).toHaveBeenCalledTimes(1);
     expect(feature).toEqual(WAY_FEATURE);
   });
 
-  const OVERPASS_GEOM_RESPONSE = {
-    elements: [{ geometry: { coordinates: [15, 51] } }],
-  };
-
   it('should work for relation', async () => {
-    const fetchJson = jest
-      .spyOn(fetch, 'fetchJson')
-      .mockImplementation((url) =>
-        Promise.resolve(
-          url.match(/overpass/) ? OVERPASS_GEOM_RESPONSE : RELATION,
-        ),
-      );
+    const fetchJson = jest.spyOn(fetch, 'fetchJson').mockResolvedValue(RELATION);
 
     const feature = await fetchFeature({ type: 'relation', id: 1234 });
-    expect(fetchJson).toHaveBeenCalledTimes(2);
+    expect(fetchJson).toHaveBeenCalledTimes(1);
     expect(feature).toEqual(RELATION_FEATURE);
   });
 
