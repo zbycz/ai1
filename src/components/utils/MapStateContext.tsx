@@ -12,11 +12,14 @@ import { PROJECT_ID } from '../../services/project';
 import { useBoolState } from '../helpers';
 import { Setter } from '../../types';
 import { LonLat } from '../../services/types';
-import Cookies from 'js-cookie';
 import Router from 'next/router';
-import { getMapViewFromHash } from '../App/helpers';
+import {
+  DEFAULT_VIEW,
+  getMapViewFromHash,
+  getViewFromClientIp,
+} from '../App/helpers';
 import { osmappLayers } from '../LayerSwitcher/osmappLayers';
-import { fakeStaticExportSkipDefaultMapView } from '../App/fakeStaticExportHelpers';
+import { isEqual } from 'lodash';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
@@ -67,10 +70,8 @@ export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const usePersistMapView = (view: View) => {
   useEffect(() => {
-    if (fakeStaticExportSkipDefaultMapView(view)) return;
-
     window.location.hash = view.join('/');
-    Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
+    localStorage.setItem('mapView', view.join('/'));
   }, [view]);
 };
 
@@ -94,10 +95,38 @@ const useActiveLayersState = () => {
   return usePersistedState('activeLayers', initLayers);
 };
 
-export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
-  children,
-  initialMapView,
-}) => {
+// On first client render, restore map view from localStorage.
+// If nothing is stored yet, fall back to ip-api.com geolocation.
+// This only runs when no hash view was supplied (i.e. initialMapView is DEFAULT_VIEW).
+const useRestoreMapView = (
+  initialMapView: View,
+  setBothViews: Setter<View>,
+) => {
+  useEffect(() => {
+    if (!isEqual(initialMapView, DEFAULT_VIEW)) return; // hash view already applied
+
+    const stored = localStorage.getItem('mapView');
+    if (stored) {
+      const parts = stored.split('/');
+      if (
+        parts.length === 3 &&
+        parts.every((p) => !Number.isNaN(parseFloat(p)))
+      ) {
+        setBothViews(parts as View);
+        return;
+      }
+    }
+
+    // No stored view – ask ip-api.com to geolocate this client
+    getViewFromClientIp().then((ipView) => {
+      if (ipView) setBothViews(ipView);
+    });
+  }, [initialMapView, setBothViews]); // eslint-disable-line react-hooks/exhaustive-deps -- runs once on mount; both values are stable
+};
+
+export const MapStateProvider: React.FC = ({ children }) => {
+  const initialMapView = getMapViewFromHash() || DEFAULT_VIEW;
+
   const [activeLayers, setActiveLayers] = useActiveLayersState();
   const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);
@@ -145,6 +174,7 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
 
   usePersistMapView(view);
   useUpdateViewFromHash(setBothViews);
+  useRestoreMapView(initialMapView, setBothViews);
 
   return (
     <MapStateContext.Provider value={mapState}>

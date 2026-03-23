@@ -14,19 +14,12 @@ import { GoogleAnalytics } from '../src/components/App/google-analytics';
 import { Umami } from '../src/components/App/umami';
 import { SnackbarProvider } from '../src/components/utils/SnackbarContext';
 import { UserSettingsProvider } from '../src/components/utils/userSettings/UserSettingsContext';
-import {
-  MapStateProvider,
-  View,
-} from '../src/components/utils/MapStateContext';
+import { MapStateProvider } from '../src/components/utils/MapStateContext';
 import { OsmAuthProvider } from '../src/components/utils/OsmAuthContext';
 import { EditDialogProvider } from '../src/components/FeaturePanel/helpers/EditDialogContext';
 import Map from '../src/components/Map/Map';
 import { TitleAndMetaTags } from '../src/helpers/TitleAndMetaTags';
-import {
-  getInitialFeature,
-  getInitialMapView,
-  getMapViewFromHash,
-} from '../src/components/App/helpers';
+import { getInitialFeature } from '../src/components/App/helpers';
 import { FeatureProvider } from '../src/components/utils/FeatureContext';
 import { StarsProvider } from '../src/components/utils/StarsContext';
 import { QueryClient, QueryClientProvider } from 'react-query';
@@ -44,7 +37,6 @@ import { HotJar } from '../src/components/App/hotjar';
 import { TicksProvider } from '../src/components/utils/TicksContext';
 import {
   fakeStaticExportCookies,
-  fakeStaticExportMapView,
   fakeStaticExportStartup,
 } from '../src/components/App/fakeStaticExportHelpers';
 
@@ -62,14 +54,12 @@ const reactQueryClient = new QueryClient();
 type OwnProps = {
   userThemeCookie: string;
   featureFromRouter: Feature | '404' | null;
-  initialMapView: View;
   cookies: Record<string, string>;
 };
 
 type Props = AppProps & EmotionCacheProviderProps & OwnProps;
 const MyApp = (props: Props) => {
   const cookies = fakeStaticExportCookies(props.cookies);
-  const initialMapView = fakeStaticExportMapView(props.initialMapView);
   const {
     Component,
     pageProps,
@@ -77,7 +67,6 @@ const MyApp = (props: Props) => {
     userThemeCookie,
     featureFromRouter,
   } = props;
-  const mapView = getMapViewFromHash() || initialMapView;
   const initialToast = getInitialToast(featureFromRouter);
 
   useEffect(() => {
@@ -104,7 +93,7 @@ const MyApp = (props: Props) => {
                 }
                 cookies={cookies}
               >
-                <MapStateProvider initialMapView={mapView}>
+                <MapStateProvider>
                   <OsmAuthProvider cookies={cookies}>
                     <StarsProvider>
                       <EditDialogProvider /* TODO supply router.query */>
@@ -159,7 +148,6 @@ MyApp.getInitialProps = async ({
     return {
       cookies: undefined,
       featureFromRouter: undefined,
-      initialMapView: ['', '', ''],
       userThemeCookie: '',
       pageProps: undefined,
     };
@@ -181,11 +169,8 @@ MyApp.getInitialProps = async ({
     }
   }
 
-  const initialMapView = await getInitialMapView(ctx);
-
   return {
     featureFromRouter,
-    initialMapView,
     cookies,
     userThemeCookie: userTheme,
     pageProps,
