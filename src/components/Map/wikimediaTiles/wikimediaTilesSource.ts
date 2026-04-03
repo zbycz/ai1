@@ -1,4 +1,4 @@
-import { GeoJSONSource, Popup } from 'maplibre-gl';
+import { GeoJSONSource, MapLayerMouseEvent, Popup } from 'maplibre-gl';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { EMPTY_GEOJSON_SOURCE } from '../consts';
 import { getGlobalMap } from '../../../services/mapStorage';
@@ -100,7 +100,7 @@ const fetchThumbnail = async (pageid: string): Promise<string | null> => {
   }
 };
 
-const onLayerClick = (e) => {
+const onLayerClick = (e: MapLayerMouseEvent) => {
   if (!e.features?.length) return;
   const map = getGlobalMap();
   const feature = e.features[0];
@@ -142,6 +142,7 @@ const onLayerClick = (e) => {
   currentPopup = popup;
 
   fetchThumbnail(pageid).then((thumbUrl) => {
+    if (popup !== currentPopup) return; // popup was closed/replaced
     if (thumbUrl) {
       const img = document.createElement('img');
       img.src = thumbUrl;

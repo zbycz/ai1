@@ -98,11 +98,11 @@ const OverlayItem = ({ layer }: { layer: Layer }) => {
   };
   const selected = activeLayers.includes(key);
   const secondary =
-    key === 'climbing' && selected
-      ? ((<ClimbingSecondary />) as React.ReactNode)
-      : key === 'wikimedia' && selected
-        ? ((<WikimediaSecondary />) as React.ReactNode)
-        : undefined;
+    key === 'climbing' && selected ? (
+      <ClimbingSecondary />
+    ) : key === 'wikimedia' && selected ? (
+      <WikimediaSecondary />
+    ) : undefined;
 
   return (
     <ListItemButton onClick={handleClick} key={key}>
