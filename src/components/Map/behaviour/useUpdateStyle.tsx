@@ -23,6 +23,10 @@ import { isUrlForRasterLayer, layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
+import {
+  addWikimediaTilesSource,
+  removeWikimediaTilesSource,
+} from '../wikimediaTiles/wikimediaTilesSource';
 import { emptyStyle } from '../styles/emptyStyle';
 import { shortbreadShadowStyle } from '../styles/shortbreadShadowStyle';
 import { shortbreadColorfulStyle } from '../styles/shortbreadColorfulStyle';
@@ -102,6 +106,13 @@ const addOverlaysToStyle = (
 ) => {
   // removeClimbingTilesSource(); // TODO call when climbing removed
 
+  const hasWikimedia = overlays.some(
+    (key) => osmappLayers[key]?.type === 'overlay' && key === 'wikimedia',
+  );
+  if (!hasWikimedia) {
+    removeWikimediaTilesSource();
+  }
+
   overlays
     .filter((key: string) => osmappLayers[key]?.type === 'overlay')
     .forEach((key: string) => {
@@ -112,6 +123,10 @@ const addOverlaysToStyle = (
           } else {
             addClimbingOverlay(style, map); // TODO remove this when climbingTiles are tested
           }
+          break;
+
+        case 'wikimedia':
+          addWikimediaTilesSource(style);
           break;
 
         case 'indoor':

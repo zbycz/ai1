@@ -5,6 +5,7 @@ import FilterHdrIcon from '@mui/icons-material/FilterHdr';
 import MapIcon from '@mui/icons-material/Map';
 import SatelliteIcon from '@mui/icons-material/Satellite';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { Bbox, Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
@@ -194,5 +195,13 @@ export const osmappLayers: Layers = {
     type: 'overlay',
     Icon: ClimbingIcon,
     attribution: ['osm'],
+  },
+  wikimedia: {
+    name: t('layers.wikimedia'),
+    type: 'overlay',
+    Icon: PhotoCameraIcon,
+    attribution: [
+      '&copy; <a href="https://commons.wikimedia.org">Wikimedia Commons</a>',
+    ],
   },
 };

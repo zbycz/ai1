@@ -346,6 +346,8 @@ export default {
   'layers.transport': 'Transport',
   'layers.climbing': 'Climbing',
   'layers.indoor': 'Indoor',
+  'layers.wikimedia': 'Wikimedia Commons',
+  'wikimedia.zoom_required': 'zoom 14+',
 
   'climbingpanel.create_climbing_route': 'Draw new route in schema',
   'climbingpanel.edit_climbing_route': 'Edit route in schema',
