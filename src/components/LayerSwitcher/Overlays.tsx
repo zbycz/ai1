@@ -77,6 +77,13 @@ const ClimbingSecondary = () => {
   return <>lite</>;
 };
 
+const WikimediaSecondary = () => {
+  const { view } = useMapStateContext();
+  const zoom = parseFloat(view?.[0] ?? '0');
+  if (zoom >= 14) return null;
+  return <>{t('wikimedia.zoom_required')}</>;
+};
+
 const OverlayItem = ({ layer }: { layer: Layer }) => {
   const { activeLayers, setActiveLayers } = useMapStateContext();
   const { key, name, Icon } = layer;
@@ -91,7 +98,11 @@ const OverlayItem = ({ layer }: { layer: Layer }) => {
   };
   const selected = activeLayers.includes(key);
   const secondary =
-    key === 'climbing' && selected ? <ClimbingSecondary /> : undefined;
+    key === 'climbing' && selected ? (
+      <ClimbingSecondary />
+    ) : key === 'wikimedia' && selected ? (
+      <WikimediaSecondary />
+    ) : undefined;
 
   return (
     <ListItemButton onClick={handleClick} key={key}>
