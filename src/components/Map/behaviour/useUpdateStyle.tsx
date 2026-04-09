@@ -10,10 +10,8 @@ import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { getRasterStyle } from '../styles/rasterStyle';
 import { DEFAULT_MAP } from '../../../config.mjs';
 import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
-import {
-  CLIMBING_SPRITE,
-  climbingLayers,
-} from '../styles/layers/climbingLayers';
+import { climbingLayers } from '../styles/layers/climbingLayers';
+import { CLIMBING_SPRITE } from '../climbingTiles/consts';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { fetchCrags } from '../../../services/fetchCrags';
 import { intl } from '../../../services/intl';
@@ -22,7 +20,14 @@ import { setUpHover } from './featureHover';
 import { isUrlForRasterLayer, layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
-import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
+import {
+  addClimbingTilesSource,
+  removeClimbingTilesSource,
+} from '../climbingTiles/climbingTilesSource';
+import {
+  addWikimediaTilesSource,
+  removeWikimediaTilesSource,
+} from '../wikimediaTiles/wikimediaTilesSource';
 import { emptyStyle } from '../styles/emptyStyle';
 import { shortbreadShadowStyle } from '../styles/shortbreadShadowStyle';
 import { shortbreadColorfulStyle } from '../styles/shortbreadColorfulStyle';
@@ -94,13 +99,22 @@ const addClimbingOverlay = (style: StyleSpecification, map: Map) => {
   );
 };
 
+const removeInactiveOverlaySources = (activeOverlays: string[]) => {
+  if (!activeOverlays.includes('climbing')) {
+    removeClimbingTilesSource();
+  }
+  if (!activeOverlays.includes('wikimedia')) {
+    removeWikimediaTilesSource();
+  }
+};
+
 const addOverlaysToStyle = (
   map: Map,
   style: StyleSpecification,
   overlays: string[],
   currentTheme: Theme,
 ) => {
-  // removeClimbingTilesSource(); // TODO call when climbing removed
+  removeInactiveOverlaySources(overlays);
 
   overlays
     .filter((key: string) => osmappLayers[key]?.type === 'overlay')
@@ -112,6 +126,10 @@ const addOverlaysToStyle = (
           } else {
             addClimbingOverlay(style, map); // TODO remove this when climbingTiles are tested
           }
+          break;
+
+        case 'wikimedia':
+          addWikimediaTilesSource(style);
           break;
 
         case 'indoor':

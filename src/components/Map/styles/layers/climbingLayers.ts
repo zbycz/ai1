@@ -6,11 +6,6 @@ import {
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
 import { AREA, CRAG } from '../../climbingTiles/consts';
 
-export const CLIMBING_SPRITE = {
-  id: 'climbing',
-  url: `${window.location.protocol}//${window.location.host}/icons-climbing/sprites/climbing`,
-};
-
 const linear = (
   from: number,
   a: number | ExpressionSpecification,

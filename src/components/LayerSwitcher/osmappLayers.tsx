@@ -5,14 +5,21 @@ import FilterHdrIcon from '@mui/icons-material/FilterHdr';
 import MapIcon from '@mui/icons-material/Map';
 import SatelliteIcon from '@mui/icons-material/Satellite';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
-import { Bbox, Layer } from '../utils/MapStateContext';
-import { t } from '../../services/intl';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import { Bbox, Layer, useMapStateContext } from '../utils/MapStateContext';
+import { intl, t, Translation } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import { Box } from '@mui/material';
 import { PoiIcon } from '../utils/icons/PoiIcon';
 import { PROJECT_ID } from '../../services/project';
+import { useQuery } from 'react-query';
+import { fetchJson } from '../../services/fetch';
+import type { ClimbingStatsResponse } from '../../types';
+import { nl2br } from '../utils/nl2br';
+import { CLIMBING_TILES_HOST } from '../../services/osm/consts';
+import { TooltipButton } from '../utils/TooltipButton';
 
 interface Layers {
   [key: string]: Layer;
@@ -29,6 +36,73 @@ const ClimbingIcon = () => {
       <PoiIcon ico="climbing" size={16} />
     </Box>
   );
+};
+
+const getLocalTime = (lastRefresh: string) =>
+  lastRefresh ? new Date(lastRefresh).toLocaleString(intl.lang) : null;
+
+const fetchClimbingStats = () =>
+  fetchJson<ClimbingStatsResponse>(
+    `${CLIMBING_TILES_HOST}api/climbing-tiles/stats`,
+  );
+
+const ClimbingSecondaryInner = () => {
+  const { data, error, isFetching } = useQuery([], () => fetchClimbingStats());
+
+  if (isFetching) {
+    return null;
+  }
+
+  if (error) {
+    console.error('Error fetching climbing stats', error); // eslint-disable-line no-console
+    return null;
+  }
+
+  const { lastRefresh, osmDataTimestamp, devStats } = data;
+  const tooltip = (
+    <>
+      <Translation
+        id="climbing_tiles.stats"
+        values={{
+          lastRefresh: getLocalTime(lastRefresh),
+          osmTime: getLocalTime(osmDataTimestamp),
+        }}
+      />
+      <br />
+      <br />
+      Dev stats:{' '}
+      {nl2br(
+        Object.entries(devStats)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n'),
+      )}
+      <br />
+    </>
+  );
+
+  return (
+    <>
+      {getLocalTime(osmDataTimestamp).replace(/:\d+( [APM]+)?$/, '$1')}
+      <TooltipButton
+        sx={{ fontSize: '14px', margin: '-8px -3px -6px -3px' }}
+        tooltip={tooltip}
+      />
+    </>
+  );
+};
+
+const ClimbingSecondary = () => {
+  if (process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
+    return <ClimbingSecondaryInner />;
+  }
+  return <>lite</>;
+};
+
+const WikimediaSecondary = () => {
+  const { view } = useMapStateContext();
+  const zoom = parseFloat(view?.[0] ?? '0');
+  if (zoom >= 14) return null;
+  return <>{t('wikimedia.zoom_required')}</>;
 };
 
 const africaBbox: Bbox = [
@@ -193,6 +267,16 @@ export const osmappLayers: Layers = {
     name: t('layers.climbing'),
     type: 'overlay',
     Icon: ClimbingIcon,
+    Secondary: ClimbingSecondary,
     attribution: ['osm'],
+  },
+  wikimedia: {
+    name: t('layers.wikimedia'),
+    type: 'overlay',
+    Icon: PhotoCameraIcon,
+    Secondary: WikimediaSecondary,
+    attribution: [
+      '&copy; <a href="https://commons.wikimedia.org">Wikimedia Commons</a>',
+    ],
   },
 };
