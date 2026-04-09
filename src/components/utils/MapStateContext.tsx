@@ -31,6 +31,7 @@ export type Layer = {
   darkUrl?: string; // optional url for dark mode
   key?: string;
   Icon?: LayerIcon;
+  Secondary?: React.ComponentType; // optional secondary info shown when layer is active
   isSatelite?: boolean;
   attribution?: string[]; // missing in spacer TODO refactor this ugly type
   maxzoom?: number;
