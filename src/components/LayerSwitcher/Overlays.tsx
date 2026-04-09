@@ -10,7 +10,6 @@ import { LayerIcon, Spacer, StyledList } from './helpers';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { dotToOptionalBr } from '../helpers';
 import { t } from '../../services/intl';
-import { osmappLayers } from './osmappLayers';
 
 const OverlayItem = ({ layer }: { layer: Layer }) => {
   const { activeLayers, setActiveLayers } = useMapStateContext();

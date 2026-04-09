@@ -24,6 +24,10 @@ import {
   addClimbingTilesSource,
   removeClimbingTilesSource,
 } from '../climbingTiles/climbingTilesSource';
+import {
+  addWikimediaTilesSource,
+  removeWikimediaTilesSource,
+} from '../wikimediaTiles/wikimediaTilesSource';
 import { emptyStyle } from '../styles/emptyStyle';
 import { shortbreadShadowStyle } from '../styles/shortbreadShadowStyle';
 import { shortbreadColorfulStyle } from '../styles/shortbreadColorfulStyle';
@@ -99,6 +103,9 @@ const removeInactiveOverlaySources = (activeOverlays: string[]) => {
   if (!activeOverlays.includes('climbing')) {
     removeClimbingTilesSource();
   }
+  if (!activeOverlays.includes('wikimedia')) {
+    removeWikimediaTilesSource();
+  }
 };
 
 const addOverlaysToStyle = (
@@ -119,6 +126,10 @@ const addOverlaysToStyle = (
           } else {
             addClimbingOverlay(style, map); // TODO remove this when climbingTiles are tested
           }
+          break;
+
+        case 'wikimedia':
+          addWikimediaTilesSource(style);
           break;
 
         case 'indoor':

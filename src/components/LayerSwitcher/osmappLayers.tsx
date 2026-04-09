@@ -5,7 +5,8 @@ import FilterHdrIcon from '@mui/icons-material/FilterHdr';
 import MapIcon from '@mui/icons-material/Map';
 import SatelliteIcon from '@mui/icons-material/Satellite';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
-import { Bbox, Layer } from '../utils/MapStateContext';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import { Bbox, Layer, useMapStateContext } from '../utils/MapStateContext';
 import { intl, t, Translation } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
@@ -95,6 +96,13 @@ const ClimbingSecondary = () => {
     return <ClimbingSecondaryInner />;
   }
   return <>lite</>;
+};
+
+const WikimediaSecondary = () => {
+  const { view } = useMapStateContext();
+  const zoom = parseFloat(view?.[0] ?? '0');
+  if (zoom >= 14) return null;
+  return <>{t('wikimedia.zoom_required')}</>;
 };
 
 const africaBbox: Bbox = [
@@ -261,5 +269,14 @@ export const osmappLayers: Layers = {
     Icon: ClimbingIcon,
     Secondary: ClimbingSecondary,
     attribution: ['osm'],
+  },
+  wikimedia: {
+    name: t('layers.wikimedia'),
+    type: 'overlay',
+    Icon: PhotoCameraIcon,
+    Secondary: WikimediaSecondary,
+    attribution: [
+      '&copy; <a href="https://commons.wikimedia.org">Wikimedia Commons</a>',
+    ],
   },
 };
