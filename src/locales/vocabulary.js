@@ -139,7 +139,7 @@ export default {
   'support_us.thanks': `Thank you!`,
   'support_us.bitcoin_dialog_title': `Support us with Bitcoin`,
 
-  'searchbox.placeholder': 'Search OpenStreetMap',
+  'searchbox.placeholder': 'Search the map',
   'searchbox.category': 'category',
   'searchbox.overpass_success': 'Results found: __count__',
   'searchbox.overpass_error': 'Error fetching results. __message__',
