@@ -96,42 +96,41 @@ const StyledLink = styled(Link)`
   }
 `;
 
-const Header = ({
-  label,
-  routesCount,
-}: {
-  label: string;
-  routesCount: number;
-}) => (
-  <Box ml={2} mr={2}>
-    <CragName>
-      <Typography
-        component="h3"
-        overflow="hidden"
-        textOverflow="ellipsis"
-        fontFamily={isOpenClimbing ? "'Piazzolla', sans-serif" : undefined}
-        fontWeight={900}
-        fontSize={32}
-        lineHeight={1.2}
-        color="primary"
-      >
-        {label}
-      </Typography>
-      {routesCount && (
-        <Chip
-          size="small"
-          variant="outlined"
-          label={
-            <>
-              <strong>{routesCount}</strong> {t('featurepanel.routes')}
-            </>
-          }
-          sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
-        />
-      )}
-    </CragName>{' '}
-  </Box>
-);
+const Header = ({ feature }: { feature: Feature }) => {
+  const label = getLabel(feature);
+  const routesCount = feature.members?.length;
+
+  return (
+    <Box ml={2} mr={2}>
+      <CragName>
+        <Typography
+          component="h3"
+          overflow="hidden"
+          textOverflow="ellipsis"
+          fontFamily={isOpenClimbing ? "'Piazzolla', sans-serif" : undefined}
+          fontWeight={900}
+          fontSize={32}
+          lineHeight={1.2}
+          color="primary"
+        >
+          {label}
+        </Typography>
+        {routesCount && (
+          <Chip
+            size="small"
+            variant="outlined"
+            label={
+              <>
+                <strong>{routesCount}</strong> {t('featurepanel.routes')}
+              </>
+            }
+            sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+          />
+        )}
+      </CragName>{' '}
+    </Box>
+  );
+};
 
 const AreaInfo = ({ crags }: { crags: Feature[] }) => {
   const { feature } = useFeatureContext();
@@ -155,7 +154,15 @@ const AreaInfo = ({ crags }: { crags: Feature[] }) => {
   );
 };
 
-const Gallery = ({ images, feature }) => {
+const Gallery = ({ feature }: { feature: Feature }) => {
+  const images =
+    feature?.imageDefs?.filter(isInstant)?.map((def) => ({
+      def,
+      image: getInstantImage(def),
+    })) ?? [];
+
+  if (!images.length) return null;
+
   const poiType = getHumanPoiType(feature);
   const alt = `${poiType} ${getLabel(feature)}`;
 
@@ -181,13 +188,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   const { setPreview } = useFeatureContext();
   const handleHover = () => feature.center && setPreview(feature);
 
-  const images =
-    feature?.imageDefs?.filter(isInstant)?.map((def) => ({
-      def,
-      image: getInstantImage(def),
-    })) ?? [];
-
-  const getOnClickWithHash = (e) => {
+  const getOnClickWithHash = (e: React.MouseEvent) => {
     e.preventDefault();
     Router.push(`/${getUrlOsmId(feature.osmMeta)}${window.location.hash}`);
   };
@@ -203,11 +204,8 @@ const CragItem = ({ feature }: { feature: Feature }) => {
         title={`${t('featurepanel.sector')} ${getLabel(feature)}`}
       >
         <InnerContainer>
-          <Header
-            label={getLabel(feature)}
-            routesCount={feature.members?.length}
-          />
-          {images.length ? <Gallery feature={feature} images={images} /> : null}
+          <Header feature={feature} />
+          <Gallery feature={feature} />
         </InnerContainer>
       </StyledLink>
       {feature.memberFeatures.length > 0 && (
@@ -244,14 +242,14 @@ const CragList = ({ crags }: { crags: Feature[] }) => {
   );
 };
 
-const NumberOfVisible = (props: { crags: any; routes: any }) => (
+const NumberOfVisible = ({ crags, routes }: { crags: number; routes: number }) => (
   <Chip
     size="small"
     variant="outlined"
     label={
       <>
-        <strong>{props.crags}</strong> {t('featurepanel.sectors')},{' '}
-        <strong>{props.routes}</strong> {t('featurepanel.routes')}
+        <strong>{crags}</strong> {t('featurepanel.sectors')},{' '}
+        <strong>{routes}</strong> {t('featurepanel.routes')}
       </>
     }
     sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
@@ -275,17 +273,13 @@ const NumberOfHiddenCrags = ({ crags }: { crags: Feature[] }) => {
 };
 
 const AllCragsDistribution = ({ crags }: { crags: Feature[] }) => {
-  const allCragRoutes = crags.reduce((acc, { memberFeatures }) => {
-    return [...acc, ...memberFeatures];
-  }, []);
+  if (crags.length < 2) return null;
 
-  if (crags.length >= 2) {
-    return <RouteDistribution features={allCragRoutes} />;
-  }
-  return null;
+  const allCragRoutes = crags.flatMap(({ memberFeatures }) => memberFeatures);
+  return <RouteDistribution features={allCragRoutes} />;
 };
 
-const FilterRow: React.FC = ({ children }) => (
+const FilterRow = ({ children }: { children: React.ReactNode }) => (
   <StyledPaper elevation={0} square>
     <Stack
       direction="row"
@@ -300,9 +294,14 @@ const FilterRow: React.FC = ({ children }) => (
 );
 
 const CragsInAreaInner = () => {
+  const { feature } = useFeatureContext();
   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
   const unfilteredCrags = useGetMemberCrags();
   const crags = useGetFilteredCrags(unfilteredCrags).sort(sortByFn(sortBy));
+
+  if (feature.tags.climbing !== 'area' || !feature.memberFeatures?.length) {
+    return null;
+  }
 
   return (
     <>
@@ -320,11 +319,4 @@ const CragsInAreaInner = () => {
   );
 };
 
-export const CragsInArea = () => {
-  const { feature } = useFeatureContext();
-  if (feature.tags.climbing !== 'area' || !feature.memberFeatures?.length) {
-    return null;
-  }
-
-  return <CragsInAreaInner />;
-};
+export const CragsInArea = () => <CragsInAreaInner />;
