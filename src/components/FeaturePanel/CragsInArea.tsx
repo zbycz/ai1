@@ -188,7 +188,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   const { setPreview } = useFeatureContext();
   const handleHover = () => feature.center && setPreview(feature);
 
-  const getOnClickWithHash = (e: React.MouseEvent) => {
+  const handleClickWithHash = (e: React.MouseEvent) => {
     e.preventDefault();
     Router.push(`/${getUrlOsmId(feature.osmMeta)}${window.location.hash}`);
   };
@@ -198,7 +198,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
       <StyledLink
         href={`/${getUrlOsmId(feature.osmMeta)}`}
         locale={intl.lang}
-        onClick={getOnClickWithHash}
+        onClick={handleClickWithHash}
         onMouseEnter={mobileMode ? undefined : handleHover}
         onMouseLeave={() => setPreview(null)}
         title={`${t('featurepanel.sector')} ${getLabel(feature)}`}
