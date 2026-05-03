@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CragsInArea.tsx – Refactoring Report</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; }
+  
+  header { background: #161b22; border-bottom: 1px solid #30363d; padding: 24px 32px; }
+  header h1 { font-size: 24px; color: #f0f6fc; }
+  header p { margin-top: 6px; color: #8b949e; font-size: 14px; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px; }
+
+  section { margin-bottom: 48px; }
+  h2 { font-size: 18px; color: #f0f6fc; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #30363d; }
+  h3 { font-size: 15px; color: #79c0ff; margin: 16px 0 8px 0; }
+
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .card p { color: #c9d1d9; line-height: 1.7; font-size: 14px; }
+  .card ul { margin-left: 20px; margin-top: 8px; }
+  .card li { color: #c9d1d9; line-height: 1.8; font-size: 14px; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .badge-green { background: #1a4731; color: #3fb950; border: 1px solid #238636; }
+  .badge-red { background: #3d1515; color: #f85149; border: 1px solid #da3633; }
+  .badge-blue { background: #1c2a4a; color: #79c0ff; border: 1px solid #1f6feb; }
+
+  .prompt-box { background: #0d1117; border: 1px solid #388bfd; border-left: 4px solid #388bfd; border-radius: 4px; padding: 16px; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.6; color: #c9d1d9; white-space: pre-wrap; overflow-x: auto; }
+
+  .diff-wrap { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; overflow-x: auto; font-family: 'Courier New', monospace; font-size: 12px; line-height: 1.5; }
+  .diff-wrap .diff-header { background: #161b22; color: #8b949e; padding: 4px 12px; border-bottom: 1px solid #30363d; }
+  .diff-wrap .diff-hunk { background: #1c2a4a; color: #79c0ff; padding: 3px 12px; }
+  .diff-wrap .diff-add { background: #0d2a0f; color: #56d364; padding: 1px 12px; }
+  .diff-wrap .diff-del { background: #3d0f0f; color: #ff7b72; padding: 1px 12px; }
+  .diff-wrap .diff-ctx { color: #8b949e; padding: 1px 12px; }
+
+  .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 900px) { .comparison-grid { grid-template-columns: 1fr; } }
+
+  .comp-item { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; }
+  .comp-item h4 { color: #f0f6fc; margin-bottom: 8px; font-size: 14px; }
+  .comp-item code { background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 10px; display: block; font-size: 11px; line-height: 1.5; white-space: pre; overflow-x: auto; color: #c9d1d9; }
+
+  .status-ok { color: #3fb950; }
+  .status-diff { color: #f0883e; }
+
+  table.compare { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.compare th { background: #161b22; color: #8b949e; text-align: left; padding: 8px 12px; border: 1px solid #30363d; }
+  table.compare td { padding: 8px 12px; border: 1px solid #30363d; vertical-align: top; }
+  table.compare tr:nth-child(even) td { background: #0d1117; }
+  table.compare tr:nth-child(odd) td { background: #161b22; }
+
+  .commit-link { color: #79c0ff; text-decoration: none; }
+  .commit-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔀 CragsInArea.tsx – Refactoring Report</h1>
+  <p>Commit <a class="commit-link" href="https://github.com/zbycz/osmapp/commit/a205e5f14e28af43697cb2865a621ef2575591d7">a205e5f</a> 
+    · "CragsInArea: refactor - extract components (#1429)" 
+    · Pavel Zbytovský · 3. října 2025</p>
+</header>
+
+<div class="container">
+
+  <!-- SECTION 1: Popis refactoringu -->
+  <section>
+    <h2>📋 Esence refactoringu (zadání pro agenta)</h2>
+    <div class="card">
+      <p>Klíčový vzor: <strong>Eliminace "prop drilling" odvozených hodnot</strong> — přesun výpočtu derived state z nadřazené (orchestrující) komponenty přímo do podkomponent, které je potřebují.</p>
+    </div>
+
+    <h3>1. Prop drilling → lokální hooks</h3>
+    <div class="card">
+      <p>Komponenta <code>CragsInAreaInner</code> počítala odvozené hodnoty a předávala je jako props dolů:</p>
+      <ul>
+        <li><strong>numberOfRoutes</strong> (reduce přes crags) → přesunuto do <code>AreaInfo</code></li>
+        <li><strong>otherFeatures</strong> (filter na memberFeatures) → přesunuto do <code>CragList</code></li>
+        <li><strong>numberOfHiddenCrags</strong> (diff délky polí) → přesunuto do <code>NumberOfHiddenCrags</code></li>
+        <li><strong>allCragRoutes</strong> (reduce přes crags) → přesunuto do nové <code>AllCragsDistribution</code></li>
+        <li><strong>feature</strong> (z useFeatureContext) → podkomponenty volají hook samy</li>
+      </ul>
+    </div>
+
+    <h3>2. Smart components – null-return pattern</h3>
+    <div class="card">
+      <p>Komponenty samy rozhodují, zda mají co vyrenderovat. Místo aby parent dělal podmíněný rendering (<code>count &gt; 0 &amp;&amp; &lt;NumberOfHiddenCrags count={count} /&gt;</code>), komponenta si sama zjistí hodnotu a vrátí <code>null</code> když nemá co zobrazit.</p>
+    </div>
+
+    <h3>3. Extrakce nových pojmenovaných sub-komponent</h3>
+    <div class="card">
+      <ul>
+        <li><strong>FilterRow</strong> — wrapper <code>React.FC</code> pro <code>StyledPaper + Stack</code> s filtry</li>
+        <li><strong>AllCragsDistribution</strong> — extrakce podmíněného bloku <code>{crags.length &gt; 1 &amp;&amp; &lt;RouteDistribution .../&gt;}</code></li>
+      </ul>
+    </div>
+
+    <h3>4. TypeScript zpřísnění props</h3>
+    <div class="card">
+      <p>Props rozhraní se zpřesnila — komponenty přijímají jen minimum nutných dat (<code>{ crags: Feature[] }</code>) a vše ostatní si odvozují samy přes hooks.</p>
+    </div>
+
+    <h3>5. Čistší JSX v CragsInAreaInner</h3>
+    <div class="card">
+      <p>Po refactoringu je <code>CragsInAreaInner</code> minimální — pouze získá filtrovaný+setřízený seznam cragů a předá ho dál. Zanořené <code>? ... : null</code> nahrazeno <code>&amp;&amp;</code>.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: Prompt sub-agenta -->
+  <section>
+    <h2>🤖 Prompt zadaný sub-agentovi</h2>
+    <div class="prompt-box">Proveď na níže uvedeném souboru refactoring podle zadání a výsledek ulož do souboru /tmp/refactored_CragsInArea.tsx.
+
+## ZADÁNÍ REFACTORINGU
+
+Cíl: Eliminovat "prop drilling" odvozených (computed) hodnot z rodičovské komponenty do podkomponent.
+Každá podkomponenta si má sama počítat svůj derived state a volat potřebné hooky přímo.
+
+Konkrétní kroky:
+
+1. **Odstraň computed state z CragsInAreaInner**: Proměnné `numberOfHiddenCrags`, `otherFeatures`,
+   `numberOfRoutes`, `allCragRoutes` a `feature` (z `useFeatureContext`) přesuň přímo do podkomponent.
+
+2. **Zjednodušení props komponent**:
+   - AreaInfo({ crags, numberOfRoutes, feature }) → AreaInfo({ crags }: { crags: Feature[] })
+   - CragList({ crags, other }) → CragList({ crags }: { crags: Feature[] })
+   - NumberOfHiddenCrags({ count: number }) → NumberOfHiddenCrags({ crags }: { crags: Feature[] })
+
+3. **Extrahuj nové sub-komponenty**:
+   - FilterRow — wrapper React.FC pro StyledPaper + Stack
+   - AllCragsDistribution — extrakce podmíněného RouteDistribution bloku
+
+4. **Zjednodušení JSX v CragsInAreaInner**:
+   - pouze získat crags a předat je níž
+   - použít && místo ? ... : null
+
+## ORIGINÁLNÍ SOUBOR
+[... originální CragsInArea.tsx ...]</div>
+  </section>
+
+  <!-- SECTION 3: Co udělal sub-agent -->
+  <section>
+    <h2>✅ Co udělal sub-agent</h2>
+    <div class="card">
+      <p>Sub-agent provedl refactoring korektně. Výsledek byl uložen do <code>refactored_CragsInArea.tsx</code>. Konkrétní změny:</p>
+      <ul>
+        <li>✅ <strong>AreaInfo</strong> — odstraněny props <code>numberOfRoutes</code> a <code>feature</code>, přidán <code>useFeatureContext()</code> a výpočet uvnitř</li>
+        <li>✅ <strong>CragList</strong> — odstraněn prop <code>other</code>, přidán <code>useFeatureContext()</code> a výpočet <code>otherFeatures</code> uvnitř</li>
+        <li>✅ <strong>NumberOfHiddenCrags</strong> — přijímá <code>crags</code>, volá <code>useGetMemberCrags()</code>, vrací <code>null</code> při count=0</li>
+        <li>✅ <strong>FilterRow</strong> — nová <code>React.FC</code> komponenta extrahovaná z inline JSX</li>
+        <li>✅ <strong>AllCragsDistribution</strong> — nová komponenta, vrací <code>null</code> při <code>crags.length &lt;= 1</code></li>
+        <li>✅ <strong>CragsInAreaInner</strong> — zjednodušena, odstraněn computed state, čisté JSX s <code>&amp;&amp;</code></li>
+      </ul>
+    </div>
+
+    <h3>Drobné odchylky od skutečného commitu</h3>
+    <table class="compare">
+      <tr><th>Aspekt</th><th>Sub-agent</th><th>Skutečný commit</th></tr>
+      <tr>
+        <td>TypeScript styl props</td>
+        <td><code>React.FC&lt;&#123; crags: Feature[] &#125;&gt;</code></td>
+        <td><code>({ crags }: &#123; crags: Feature[] &#125;)</code></td>
+      </tr>
+      <tr>
+        <td>Pořadí CragList vs CragItem</td>
+        <td>CragList před CragItem</td>
+        <td>CragList za CragItem</td>
+      </tr>
+      <tr>
+        <td>FilterRow children type</td>
+        <td><code>React.FC&lt;&#123; children: React.ReactNode &#125;&gt;</code></td>
+        <td><code>React.FC</code> (bez explicitního children)</td>
+      </tr>
+      <tr>
+        <td>AllCragsDistribution pořadí</td>
+        <td>null-check první, pak reduce</td>
+        <td>reduce první, pak podmínka (ekvivalentní)</td>
+      </tr>
+      <tr>
+        <td>Threshold pro FilterRow</td>
+        <td><code>unfilteredCrags.length &gt; 0</code></td>
+        <td><code>unfilteredCrags.length &gt;= 2</code></td>
+      </tr>
+      <tr>
+        <td>Threshold pro AreaInfo addition</td>
+        <td><code>crags.length &gt; 1</code></td>
+        <td><code>crags.length &gt;= 2</code> (ekvivalentní)</td>
+      </tr>
+    </table>
+  </section>
+
+  <!-- SECTION 4: Diff Original -> Agent -->
+  <section>
+    <h2>📊 Diff 1: Originál → Sub-agent refactoring</h2>
+    <p style="color:#8b949e;font-size:13px;margin-bottom:12px;">Co změnil sub-agent oproti původnímu souboru.</p>
+    <div class="diff-wrap" id="diff1"></div>
+  </section>
+
+  <!-- SECTION 5: Diff Agent -> Commit -->
+  <section>
+    <h2>📊 Diff 2: Sub-agent výsledek → Skutečný commit</h2>
+    <p style="color:#8b949e;font-size:13px;margin-bottom:12px;">Rozdíly mezi sub-agentem a tím, co bylo reálně commitnuto.</p>
+    <div class="diff-wrap" id="diff2"></div>
+  </section>
+
+</div>
+
+<script>
+// Diff 1: Original -> Agent
+const diff1Content = `<div class="diff-header">--- ORIGINAL (před commitem)</div>
+<div class="diff-header">+++ SUB-AGENT výsledek</div>
+<div class="diff-hunk">@@ -133,7 +133,12 @@</div>
+<div class="diff-ctx">   &lt;/Box&gt;
+</div>
+<div class="diff-ctx"> );
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-const AreaInfo = ({ crags, numberOfRoutes, feature }) =&gt; {
+</div>
+<div class="diff-add">+const AreaInfo: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-add">+  const { feature } = useFeatureContext();
+</div>
+<div class="diff-add">+  const numberOfRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="diff-add">+    return acc + (memberFeatures?.length ?? 0);
+</div>
+<div class="diff-add">+  }, 0);
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-ctx">   return (
+</div>
+<div class="diff-ctx">     &lt;PanelLabel
+</div>
+<div class="diff-ctx">       addition={
+</div>
+<div class="diff-hunk">@@ -171,7 +176,12 @@</div>
+<div class="diff-ctx">   );
+</div>
+<div class="diff-ctx"> };
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-const CragList = ({ crags, other }) =&gt; {
+</div>
+<div class="diff-add">+const CragList: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-add">+  const { feature } = useFeatureContext();
+</div>
+<div class="diff-add">+  const otherFeatures = feature.memberFeatures.filter(
+</div>
+<div class="diff-add">+    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="diff-add">+  );
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-ctx">   return (
+</div>
+<div class="diff-ctx">     &lt;Box mt={2} mb={4}&gt;
+</div>
+<div class="diff-ctx">       &lt;CragListContainer&gt;
+</div>
+<div class="diff-hunk">@@ -180,9 +190,9 @@</div>
+<div class="diff-ctx">         ))}
+</div>
+<div class="diff-ctx">       &lt;/CragListContainer&gt;
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-      {other.length &gt; 0 &amp;&amp; (
+</div>
+<div class="diff-add">+      {otherFeatures.length &gt; 0 &amp;&amp; (
+</div>
+<div class="diff-ctx">         &lt;Ul&gt;
+</div>
+<div class="diff-del">-          {other.map((item) =&gt; (
+</div>
+<div class="diff-add">+          {otherFeatures.map((item) =&gt; (
+</div>
+<div class="diff-ctx">             &lt;MemberItem key={getReactKey(item)} feature={item} /&gt;
+</div>
+<div class="diff-ctx">           ))}
+</div>
+<div class="diff-ctx">         &lt;/Ul&gt;
+</div>
+<div class="diff-hunk">@@ -248,63 +258,61 @@</div>
+<div class="diff-ctx">   /&gt;
+</div>
+<div class="diff-ctx"> );
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-const NumberOfHiddenCrags = (props: { count: number }) =&gt; (
+</div>
+<div class="diff-del">-  &lt;ClientOnly&gt;
+</div>
+<div class="diff-del">-    &lt;Typography variant="caption" color="secondary" sx={{ paddingRight: 2 }}&gt;
+</div>
+<div class="diff-del">-      &lt;strong&gt;{props.count}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="diff-del">-    &lt;/Typography&gt;
+</div>
+<div class="diff-del">-  &lt;/ClientOnly&gt;
+</div>
+<div class="diff-add">+const NumberOfHiddenCrags: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-add">+  const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="diff-add">+  const count = unfilteredCrags.length - crags.length;
+</div>
+<div class="diff-add">+  if (count === 0) return null;
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+  return (
+</div>
+<div class="diff-add">+    &lt;ClientOnly&gt;
+</div>
+<div class="diff-add">+      &lt;Typography variant="caption" color="secondary" sx={{ paddingRight: 2 }}&gt;
+</div>
+<div class="diff-add">+        &lt;strong&gt;{count}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="diff-add">+      &lt;/Typography&gt;
+</div>
+<div class="diff-add">+    &lt;/ClientOnly&gt;
+</div>
+<div class="diff-add">+  );
+</div>
+<div class="diff-add">+};
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+const FilterRow: React.FC&lt;{ children: React.ReactNode }&gt; = ({ children }) =&gt; (
+</div>
+<div class="diff-add">+  &lt;StyledPaper elevation={0} square&gt;
+</div>
+<div class="diff-add">+    &lt;Stack
+</div>
+<div class="diff-add">+      direction="row"
+</div>
+<div class="diff-add">+      spacing={0.5}
+</div>
+<div class="diff-add">+      justifyContent="flex-end"
+</div>
+<div class="diff-add">+      m={1}
+</div>
+<div class="diff-add">+      alignItems="center"
+</div>
+<div class="diff-add">+    &gt;
+</div>
+<div class="diff-add">+      {children}
+</div>
+<div class="diff-add">+    &lt;/Stack&gt;
+</div>
+<div class="diff-add">+  &lt;/StyledPaper&gt;
+</div>
+<div class="diff-ctx"> );
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-add">+const AllCragsDistribution: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-add">+  if (crags.length &lt;= 1) return null;
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+  const allCragRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="diff-add">+    return [...acc, ...memberFeatures];
+</div>
+<div class="diff-add">+  }, []);
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+  return &lt;RouteDistribution features={allCragRoutes} /&gt;;
+</div>
+<div class="diff-add">+};
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-ctx"> const CragsInAreaInner = () =&gt; {
+</div>
+<div class="diff-del">-  const { feature } = useFeatureContext();
+</div>
+<div class="diff-ctx">   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
+</div>
+<div class="diff-ctx">   const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="diff-ctx">   const crags = useGetFilteredCrags(unfilteredCrags).sort(sortByFn(sortBy));
+</div>
+<div class="diff-del">-  const numberOfHiddenCrags = unfilteredCrags.length - crags.length;
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-  const otherFeatures = feature.memberFeatures.filter(
+</div>
+<div class="diff-del">-    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="diff-del">-  );
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-  const numberOfRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="diff-del">-    return acc + (memberFeatures?.length ?? 0);
+</div>
+<div class="diff-del">-  }, 0);
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-  const allCragRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="diff-del">-    return [...acc, ...memberFeatures];
+</div>
+<div class="diff-del">-  }, []);
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-ctx">   return (
+</div>
+<div class="diff-ctx">     &lt;&gt;
+</div>
+<div class="diff-del">-      {unfilteredCrags.length &gt; 0 ? (
+</div>
+<div class="diff-del">-        &lt;&gt;
+</div>
+<div class="diff-del">-          &lt;StyledPaper elevation={0} square&gt;
+</div>
+<div class="diff-del">-            &lt;Stack
+</div>
+<div class="diff-del">-              direction="row"
+</div>
+<div class="diff-del">-              spacing={0.5}
+</div>
+<div class="diff-del">-              justifyContent="flex-end"
+</div>
+<div class="diff-del">-              m={1}
+</div>
+<div class="diff-del">-              alignItems="center"
+</div>
+<div class="diff-del">-            &gt;
+</div>
+<div class="diff-del">-              {numberOfHiddenCrags &gt; 0 &amp;&amp; (
+</div>
+<div class="diff-del">-                &lt;NumberOfHiddenCrags count={numberOfHiddenCrags} /&gt;
+</div>
+<div class="diff-del">-              )}
+</div>
+<div class="diff-del">-              &lt;CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} /&gt;
+</div>
+<div class="diff-del">-              &lt;CragsInAreaFilter /&gt;
+</div>
+<div class="diff-del">-            &lt;/Stack&gt;
+</div>
+<div class="diff-del">-          &lt;/StyledPaper&gt;
+</div>
+<div class="diff-del">-          {crags.length &gt; 1 &amp;&amp; &lt;RouteDistribution features={allCragRoutes} /&gt;}
+</div>
+<div class="diff-del">-        &lt;/&gt;
+</div>
+<div class="diff-del">-      ) : null}
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-      &lt;AreaInfo
+</div>
+<div class="diff-del">-        crags={crags}
+</div>
+<div class="diff-del">-        numberOfRoutes={numberOfRoutes}
+</div>
+<div class="diff-del">-        feature={feature}
+</div>
+<div class="diff-del">-      /&gt;
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-      &lt;CragList crags={crags} other={otherFeatures} /&gt;
+</div>
+<div class="diff-add">+      {unfilteredCrags.length &gt; 0 &amp;&amp; (
+</div>
+<div class="diff-add">+        &lt;FilterRow&gt;
+</div>
+<div class="diff-add">+          &lt;NumberOfHiddenCrags crags={crags} /&gt;
+</div>
+<div class="diff-add">+          &lt;CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} /&gt;
+</div>
+<div class="diff-add">+          &lt;CragsInAreaFilter /&gt;
+</div>
+<div class="diff-add">+        &lt;/FilterRow&gt;
+</div>
+<div class="diff-add">+      )}
+</div>
+<div class="diff-add">+      &lt;AllCragsDistribution crags={crags} /&gt;
+</div>
+<div class="diff-add">+      &lt;AreaInfo crags={crags} /&gt;
+</div>
+<div class="diff-add">+      &lt;CragList crags={crags} /&gt;
+</div>
+<div class="diff-ctx">     &lt;/&gt;
+</div>
+<div class="diff-ctx">   );
+</div>
+<div class="diff-ctx"> };
+</div>`;
+
+// Diff 2: Agent -> Commit  
+const diff2Content = `<div class="diff-header">--- SUB-AGENT výsledek</div>
+<div class="diff-header">+++ SKUTEČNÝ commit (a205e5f)</div>
+<div class="diff-hunk">@@ -133,7 +133,7 @@</div>
+<div class="diff-ctx">   &lt;/Box&gt;
+</div>
+<div class="diff-ctx"> );
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-const AreaInfo: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-add">+const AreaInfo = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="diff-ctx">   const { feature } = useFeatureContext();
+</div>
+<div class="diff-ctx">   const numberOfRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="diff-ctx">     return acc + (memberFeatures?.length ?? 0);
+</div>
+<div class="diff-hunk">@@ -142,7 +142,7 @@</div>
+<div class="diff-ctx">   return (
+</div>
+<div class="diff-ctx">     &lt;PanelLabel
+</div>
+<div class="diff-ctx">       addition={
+</div>
+<div class="diff-del">-        crags.length &gt; 1 ? (
+</div>
+<div class="diff-add">+        crags.length &gt;= 2 ? (
+</div>
+<div class="diff-ctx">           &lt;NumberOfVisible crags={crags.length} routes={numberOfRoutes} /&gt;
+</div>
+<div class="diff-ctx">         ) : null
+</div>
+<div class="diff-ctx">       }
+</div>
+<div class="diff-hunk">@@ -173,31 +173,6 @@</div>
+<div class="diff-ctx">         ))}
+</div>
+<div class="diff-ctx">       &lt;/Slider&gt;
+</div>
+<div class="diff-ctx">     &lt;/Wrapper&gt;
+</div>
+<div class="diff-del">-  );
+</div>
+<div class="diff-del">-};
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-const CragList: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-del">-  const { feature } = useFeatureContext();
+</div>
+<div class="diff-del">-  const otherFeatures = feature.memberFeatures.filter(
+</div>
+<div class="diff-del">-    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="diff-del">-  );
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-  return (
+</div>
+<div class="diff-del">-    &lt;Box mt={2} mb={4}&gt;
+</div>
+<div class="diff-del">-      &lt;CragListContainer&gt;
+</div>
+<div class="diff-del">-        {crags.map((item) =&gt; (
+</div>
+<div class="diff-del">-          &lt;CragItem key={getOsmappLink(item)} feature={item} /&gt;
+</div>
+<div class="diff-del">-        ))}
+</div>
+<div class="diff-del">-      &lt;/CragListContainer&gt;
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-      {otherFeatures.length &gt; 0 &amp;&amp; (
+</div>
+<div class="diff-del">-        &lt;Ul&gt;
+</div>
+<div class="diff-del">-          {otherFeatures.map((item) =&gt; (
+</div>
+<div class="diff-del">-            &lt;MemberItem key={getReactKey(item)} feature={item} /&gt;
+</div>
+<div class="diff-del">-          ))}
+</div>
+<div class="diff-del">-        &lt;/Ul&gt;
+</div>
+<div class="diff-del">-      )}
+</div>
+<div class="diff-del">-    &lt;/Box&gt;
+</div>
+<div class="diff-ctx">   );
+</div>
+<div class="diff-ctx"> };
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-hunk">@@ -244,6 +219,31 @@</div>
+<div class="diff-ctx">   );
+</div>
+<div class="diff-ctx"> };
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-add">+const CragList = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="diff-add">+  const { feature } = useFeatureContext();
+</div>
+<div class="diff-add">+  const otherFeatures = feature.memberFeatures.filter(
+</div>
+<div class="diff-add">+    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="diff-add">+  );
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+  return (
+</div>
+<div class="diff-add">+    &lt;Box mt={2} mb={4}&gt;
+</div>
+<div class="diff-add">+      &lt;CragListContainer&gt;
+</div>
+<div class="diff-add">+        {crags.map((item) =&gt; (
+</div>
+<div class="diff-add">+          &lt;CragItem key={getOsmappLink(item)} feature={item} /&gt;
+</div>
+<div class="diff-add">+        ))}
+</div>
+<div class="diff-add">+      &lt;/CragListContainer&gt;
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+      {otherFeatures.length &gt; 0 &amp;&amp; (
+</div>
+<div class="diff-add">+        &lt;Ul&gt;
+</div>
+<div class="diff-add">+          {otherFeatures.map((item) =&gt; (
+</div>
+<div class="diff-add">+            &lt;MemberItem key={getReactKey(item)} feature={item} /&gt;
+</div>
+<div class="diff-add">+          ))}
+</div>
+<div class="diff-add">+        &lt;/Ul&gt;
+</div>
+<div class="diff-add">+      )}
+</div>
+<div class="diff-add">+    &lt;/Box&gt;
+</div>
+<div class="diff-add">+  );
+</div>
+<div class="diff-add">+};
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-ctx"> const NumberOfVisible = (props: { crags: any; routes: any }) =&gt; (
+</div>
+<div class="diff-ctx">   &lt;Chip
+</div>
+<div class="diff-ctx">     size="small"
+</div>
+<div class="diff-hunk">@@ -258,21 +258,34 @@</div>
+<div class="diff-ctx">   /&gt;
+</div>
+<div class="diff-ctx"> );
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-const NumberOfHiddenCrags: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-add">+const NumberOfHiddenCrags = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="diff-ctx">   const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="diff-del">-  const count = unfilteredCrags.length - crags.length;
+</div>
+<div class="diff-del">-  if (count === 0) return null;
+</div>
+<div class="diff-add">+  const numberOfHiddenCrags = unfilteredCrags.length - crags.length;
+</div>
+<div class="diff-add">+  if (!numberOfHiddenCrags) {
+</div>
+<div class="diff-add">+    return null;
+</div>
+<div class="diff-add">+  }
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-ctx">   return (
+</div>
+<div class="diff-ctx">     &lt;ClientOnly&gt;
+</div>
+<div class="diff-ctx">       &lt;Typography variant="caption" color="secondary" sx={{ paddingRight: 2 }}&gt;
+</div>
+<div class="diff-del">-        &lt;strong&gt;{count}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="diff-add">+        &lt;strong&gt;{numberOfHiddenCrags}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="diff-ctx">       &lt;/Typography&gt;
+</div>
+<div class="diff-ctx">     &lt;/ClientOnly&gt;
+</div>
+<div class="diff-ctx">   );
+</div>
+<div class="diff-ctx"> };
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-const FilterRow: React.FC&lt;{ children: React.ReactNode }&gt; = ({ children }) =&gt; (
+</div>
+<div class="diff-add">+const AllCragsDistribution = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="diff-add">+  const allCragRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="diff-add">+    return [...acc, ...memberFeatures];
+</div>
+<div class="diff-add">+  }, []);
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+  if (crags.length &gt;= 2) {
+</div>
+<div class="diff-add">+    return &lt;RouteDistribution features={allCragRoutes} /&gt;;
+</div>
+<div class="diff-add">+  }
+</div>
+<div class="diff-add">+  return null;
+</div>
+<div class="diff-add">+};
+</div>
+<div class="diff-add">+
+</div>
+<div class="diff-add">+const FilterRow: React.FC = ({ children }) =&gt; (
+</div>
+<div class="diff-ctx">   &lt;StyledPaper elevation={0} square&gt;
+</div>
+<div class="diff-ctx">     &lt;Stack
+</div>
+<div class="diff-ctx">       direction="row"
+</div>
+<div class="diff-hunk">@@ -286,16 +299,6 @@</div>
+<div class="diff-ctx">   &lt;/StyledPaper&gt;
+</div>
+<div class="diff-ctx"> );
+</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-del">-const AllCragsDistribution: React.FC&lt;{ crags: Feature[] }&gt; = ({ crags }) =&gt; {
+</div>
+<div class="diff-del">-  if (crags.length &lt;= 1) return null;
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-  const allCragRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="diff-del">-    return [...acc, ...memberFeatures];
+</div>
+<div class="diff-del">-  }, []);
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-del">-  return &lt;RouteDistribution features={allCragRoutes} /&gt;;
+</div>
+<div class="diff-del">-};
+</div>
+<div class="diff-del">-
+</div>
+<div class="diff-ctx"> const CragsInAreaInner = () =&gt; {
+</div>
+<div class="diff-ctx">   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
+</div>
+<div class="diff-ctx">   const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="diff-hunk">@@ -303,7 +306,7 @@</div>
+<div class="diff-ctx"> 
+</div>
+<div class="diff-ctx">   return (
+</div>
+<div class="diff-ctx">     &lt;&gt;
+</div>
+<div class="diff-del">-      {unfilteredCrags.length &gt; 0 &amp;&amp; (
+</div>
+<div class="diff-add">+      {unfilteredCrags.length &gt;= 2 &amp;&amp; (
+</div>
+<div class="diff-ctx">         &lt;FilterRow&gt;
+</div>
+<div class="diff-ctx">           &lt;NumberOfHiddenCrags crags={crags} /&gt;
+</div>
+<div class="diff-ctx">           &lt;CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} /&gt;
+</div>`;
+
+document.getElementById('diff1').innerHTML = diff1Content;
+document.getElementById('diff2').innerHTML = diff2Content;
+</script>
+</body>
+</html>
