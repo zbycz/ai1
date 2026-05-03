@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<title>Diff: Originální commit vs Subagent</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; }
+h1 { padding: 24px 32px 8px; font-size: 22px; color: #f0f6fc; border-bottom: 1px solid #30363d; }
+.desc { padding: 12px 32px 20px; color: #8b949e; font-size: 14px; line-height: 1.5; }
+.desc code { background: #161b22; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 12px; color: #79c0ff; }
+.columns { display: grid; grid-template-columns: 1fr 1fr; gap: 0; height: calc(100vh - 140px); }
+.col { display: flex; flex-direction: column; overflow: hidden; border-right: 1px solid #30363d; }
+.col:last-child { border-right: none; }
+.col-title { padding: 10px 16px; font-size: 13px; font-weight: 600; background: #161b22; border-bottom: 1px solid #30363d; color: #f0f6fc; }
+.col-title .subtitle { color: #8b949e; font-weight: 400; font-size: 12px; margin-top: 2px; }
+.diff-content { overflow: auto; flex: 1; }
+pre { font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace; font-size: 12px; line-height: 1.45; padding: 8px 0; }
+.add { background: #0d2b1b; color: #aff5b4; display: block; white-space: pre; padding: 0 16px; }
+.del { background: #2b0d0d; color: #ffa198; display: block; white-space: pre; padding: 0 16px; }
+.ctx { color: #8b949e; display: block; white-space: pre; padding: 0 16px; }
+.hunk { background: #0d1e4d; color: #79c0ff; display: block; white-space: pre; padding: 2px 16px; margin: 4px 0; font-size: 11px; }
+.file { color: #58a6ff; display: block; white-space: pre; padding: 2px 16px; font-size: 11px; }
+.summary { padding: 16px 32px; background: #161b22; border-top: 1px solid #30363d; }
+.summary h3 { font-size: 14px; color: #f0f6fc; margin-bottom: 10px; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.compare-table th { background: #21262d; color: #c9d1d9; padding: 8px 12px; text-align: left; border: 1px solid #30363d; }
+.compare-table td { padding: 8px 12px; border: 1px solid #30363d; vertical-align: top; }
+.compare-table tr:nth-child(even) td { background: #161b22; }
+.badge-same { color: #3fb950; }
+.badge-diff { color: #f0883e; }
+.badge-extra { color: #79c0ff; }
+</style>
+</head>
+<body>
+<h1>🔀 Srovnání refactoringu: Originální commit vs Subagent</h1>
+<div class="desc">
+  Commit <code>a205e5f</code> z osmapp vs. výstup subagenta, který dostal stejný soubor + popis refactoringu v češtině.<br>
+  Vlevo: co udělal originální commit. Vpravo: co udělal subagent.
+</div>
+<div class="columns">
+  <div class="col">
+    <div class="col-title">
+      Originální commit <code>a205e5f</code>
+      <div class="subtitle">CragsInArea: refactor - extract components (#1429)</div>
+    </div>
+    <div class="diff-content">
+      <pre><div class="file">--- </div>
+<div class="file">+++ </div>
+<div class="hunk">@@ -96,48 +96,52 @@</div>
+<div class="ctx">   }
+</div>
+<div class="ctx"> `;
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const Header = ({
+</div>
+<div class="del">-  label,
+</div>
+<div class="del">-  routesCount,
+</div>
+<div class="del">-}: {
+</div>
+<div class="del">-  label: string;
+</div>
+<div class="del">-  routesCount: number;
+</div>
+<div class="del">-}) =&gt; (
+</div>
+<div class="del">-  &lt;Box ml={2} mr={2}&gt;
+</div>
+<div class="del">-    &lt;CragName&gt;
+</div>
+<div class="del">-      &lt;Typography
+</div>
+<div class="del">-        component="h3"
+</div>
+<div class="del">-        overflow="hidden"
+</div>
+<div class="del">-        textOverflow="ellipsis"
+</div>
+<div class="del">-        fontFamily={isOpenClimbing ? "'Piazzolla', sans-serif" : undefined}
+</div>
+<div class="del">-        fontWeight={900}
+</div>
+<div class="del">-        fontSize={32}
+</div>
+<div class="del">-        lineHeight={1.2}
+</div>
+<div class="del">-        color="primary"
+</div>
+<div class="del">-      &gt;
+</div>
+<div class="del">-        {label}
+</div>
+<div class="del">-      &lt;/Typography&gt;
+</div>
+<div class="del">-      {routesCount &amp;&amp; (
+</div>
+<div class="del">-        &lt;Chip
+</div>
+<div class="del">-          size="small"
+</div>
+<div class="del">-          variant="outlined"
+</div>
+<div class="del">-          label={
+</div>
+<div class="del">-            &lt;&gt;
+</div>
+<div class="del">-              &lt;strong&gt;{routesCount}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="del">-            &lt;/&gt;
+</div>
+<div class="del">-          }
+</div>
+<div class="del">-          sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+</div>
+<div class="del">-        /&gt;
+</div>
+<div class="del">-      )}
+</div>
+<div class="del">-    &lt;/CragName&gt;{' '}
+</div>
+<div class="del">-  &lt;/Box&gt;
+</div>
+<div class="del">-);
+</div>
+<div class="del">-
+</div>
+<div class="del">-const AreaInfo = ({ crags, numberOfRoutes, feature }) =&gt; {
+</div>
+<div class="add">+const Header = ({ feature }: { feature: Feature }) =&gt; {
+</div>
+<div class="add">+  const label = getLabel(feature);
+</div>
+<div class="add">+  const routesCount = feature.members?.length;
+</div>
+<div class="add">+
+</div>
+<div class="add">+  return (
+</div>
+<div class="add">+    &lt;Box ml={2} mr={2}&gt;
+</div>
+<div class="add">+      &lt;CragName&gt;
+</div>
+<div class="add">+        &lt;Typography
+</div>
+<div class="add">+          component="h3"
+</div>
+<div class="add">+          overflow="hidden"
+</div>
+<div class="add">+          textOverflow="ellipsis"
+</div>
+<div class="add">+          fontFamily={isOpenClimbing ? "'Piazzolla', sans-serif" : undefined}
+</div>
+<div class="add">+          fontWeight={900}
+</div>
+<div class="add">+          fontSize={32}
+</div>
+<div class="add">+          lineHeight={1.2}
+</div>
+<div class="add">+          color="primary"
+</div>
+<div class="add">+        &gt;
+</div>
+<div class="add">+          {label}
+</div>
+<div class="add">+        &lt;/Typography&gt;
+</div>
+<div class="add">+        {routesCount &amp;&amp; (
+</div>
+<div class="add">+          &lt;Chip
+</div>
+<div class="add">+            size="small"
+</div>
+<div class="add">+            variant="outlined"
+</div>
+<div class="add">+            label={
+</div>
+<div class="add">+              &lt;&gt;
+</div>
+<div class="add">+                &lt;strong&gt;{routesCount}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="add">+              &lt;/&gt;
+</div>
+<div class="add">+            }
+</div>
+<div class="add">+            sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+</div>
+<div class="add">+          /&gt;
+</div>
+<div class="add">+        )}
+</div>
+<div class="add">+      &lt;/CragName&gt;{' '}
+</div>
+<div class="add">+    &lt;/Box&gt;
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+};
+</div>
+<div class="add">+
+</div>
+<div class="add">+const AreaInfo = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="add">+  const { feature } = useFeatureContext();
+</div>
+<div class="add">+  const numberOfRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="add">+    return acc + (memberFeatures?.length ?? 0);
+</div>
+<div class="add">+  }, 0);
+</div>
+<div class="add">+
+</div>
+<div class="ctx">   return (
+</div>
+<div class="ctx">     &lt;PanelLabel
+</div>
+<div class="ctx">       addition={
+</div>
+<div class="del">-        crags.length &gt; 1 ? (
+</div>
+<div class="add">+        crags.length &gt;= 2 ? (
+</div>
+<div class="ctx">           &lt;NumberOfVisible crags={crags.length} routes={numberOfRoutes} /&gt;
+</div>
+<div class="ctx">         ) : null
+</div>
+<div class="ctx">       }
+</div>
+<div class="hunk">@@ -150,7 +154,15 @@</div>
+<div class="ctx">   );
+</div>
+<div class="ctx"> };
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const Gallery = ({ images, feature }) =&gt; {
+</div>
+<div class="add">+const Gallery = ({ feature }: { feature: Feature }) =&gt; {
+</div>
+<div class="add">+  const images =
+</div>
+<div class="add">+    feature?.imageDefs?.filter(isInstant)?.map((def) =&gt; ({
+</div>
+<div class="add">+      def,
+</div>
+<div class="add">+      image: getInstantImage(def),
+</div>
+<div class="add">+    })) ?? [];
+</div>
+<div class="add">+
+</div>
+<div class="add">+  if (!images.length) return null;
+</div>
+<div class="add">+
+</div>
+<div class="ctx">   const poiType = getHumanPoiType(feature);
+</div>
+<div class="ctx">   const alt = `${poiType} ${getLabel(feature)}`;
+</div>
+<div class="ctx"> 
+</div>
+<div class="hunk">@@ -171,38 +183,12 @@</div>
+<div class="ctx">   );
+</div>
+<div class="ctx"> };
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const CragList = ({ crags, other }) =&gt; {
+</div>
+<div class="del">-  return (
+</div>
+<div class="del">-    &lt;Box mt={2} mb={4}&gt;
+</div>
+<div class="del">-      &lt;CragListContainer&gt;
+</div>
+<div class="del">-        {crags.map((item) =&gt; (
+</div>
+<div class="del">-          &lt;CragItem key={getOsmappLink(item)} feature={item} /&gt;
+</div>
+<div class="del">-        ))}
+</div>
+<div class="del">-      &lt;/CragListContainer&gt;
+</div>
+<div class="del">-
+</div>
+<div class="del">-      {other.length &gt; 0 &amp;&amp; (
+</div>
+<div class="del">-        &lt;Ul&gt;
+</div>
+<div class="del">-          {other.map((item) =&gt; (
+</div>
+<div class="del">-            &lt;MemberItem key={getReactKey(item)} feature={item} /&gt;
+</div>
+<div class="del">-          ))}
+</div>
+<div class="del">-        &lt;/Ul&gt;
+</div>
+<div class="del">-      )}
+</div>
+<div class="del">-    &lt;/Box&gt;
+</div>
+<div class="del">-  );
+</div>
+<div class="del">-};
+</div>
+<div class="del">-
+</div>
+<div class="ctx"> const CragItem = ({ feature }: { feature: Feature }) =&gt; {
+</div>
+<div class="ctx">   const mobileMode = useMobileMode();
+</div>
+<div class="ctx">   const { setPreview } = useFeatureContext();
+</div>
+<div class="ctx">   const handleHover = () =&gt; feature.center &amp;&amp; setPreview(feature);
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-  const images =
+</div>
+<div class="del">-    feature?.imageDefs?.filter(isInstant)?.map((def) =&gt; ({
+</div>
+<div class="del">-      def,
+</div>
+<div class="del">-      image: getInstantImage(def),
+</div>
+<div class="del">-    })) ?? [];
+</div>
+<div class="del">-
+</div>
+<div class="del">-  const getOnClickWithHash = (e) =&gt; {
+</div>
+<div class="add">+  const handleClickWithHash = (e: React.MouseEvent) =&gt; {
+</div>
+<div class="ctx">     e.preventDefault();
+</div>
+<div class="ctx">     Router.push(`/${getUrlOsmId(feature.osmMeta)}${window.location.hash}`);
+</div>
+<div class="ctx">   };
+</div>
+<div class="hunk">@@ -212,17 +198,14 @@</div>
+<div class="ctx">       &lt;StyledLink
+</div>
+<div class="ctx">         href={`/${getUrlOsmId(feature.osmMeta)}`}
+</div>
+<div class="ctx">         locale={intl.lang}
+</div>
+<div class="del">-        onClick={getOnClickWithHash}
+</div>
+<div class="add">+        onClick={handleClickWithHash}
+</div>
+<div class="ctx">         onMouseEnter={mobileMode ? undefined : handleHover}
+</div>
+<div class="ctx">         onMouseLeave={() =&gt; setPreview(null)}
+</div>
+<div class="ctx">         title={`${t('featurepanel.sector')} ${getLabel(feature)}`}
+</div>
+<div class="ctx">       &gt;
+</div>
+<div class="ctx">         &lt;InnerContainer&gt;
+</div>
+<div class="del">-          &lt;Header
+</div>
+<div class="del">-            label={getLabel(feature)}
+</div>
+<div class="del">-            routesCount={feature.members?.length}
+</div>
+<div class="del">-          /&gt;
+</div>
+<div class="del">-          {images.length ? &lt;Gallery feature={feature} images={images} /&gt; : null}
+</div>
+<div class="add">+          &lt;Header feature={feature} /&gt;
+</div>
+<div class="add">+          &lt;Gallery feature={feature} /&gt;
+</div>
+<div class="ctx">         &lt;/InnerContainer&gt;
+</div>
+<div class="ctx">       &lt;/StyledLink&gt;
+</div>
+<div class="ctx">       {feature.memberFeatures.length &gt; 0 &amp;&amp; (
+</div>
+<div class="hunk">@@ -234,26 +217,80 @@</div>
+<div class="ctx">   );
+</div>
+<div class="ctx"> };
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const NumberOfVisible = (props: { crags: any; routes: any }) =&gt; (
+</div>
+<div class="add">+const CragList = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="add">+  const { feature } = useFeatureContext();
+</div>
+<div class="add">+  const otherFeatures = feature.memberFeatures.filter(
+</div>
+<div class="add">+    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+
+</div>
+<div class="add">+  return (
+</div>
+<div class="add">+    &lt;Box mt={2} mb={4}&gt;
+</div>
+<div class="add">+      &lt;CragListContainer&gt;
+</div>
+<div class="add">+        {crags.map((item) =&gt; (
+</div>
+<div class="add">+          &lt;CragItem key={getOsmappLink(item)} feature={item} /&gt;
+</div>
+<div class="add">+        ))}
+</div>
+<div class="add">+      &lt;/CragListContainer&gt;
+</div>
+<div class="add">+
+</div>
+<div class="add">+      {otherFeatures.length &gt; 0 &amp;&amp; (
+</div>
+<div class="add">+        &lt;Ul&gt;
+</div>
+<div class="add">+          {otherFeatures.map((item) =&gt; (
+</div>
+<div class="add">+            &lt;MemberItem key={getReactKey(item)} feature={item} /&gt;
+</div>
+<div class="add">+          ))}
+</div>
+<div class="add">+        &lt;/Ul&gt;
+</div>
+<div class="add">+      )}
+</div>
+<div class="add">+    &lt;/Box&gt;
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+};
+</div>
+<div class="add">+
+</div>
+<div class="add">+const NumberOfVisible = ({ crags, routes }: { crags: number; routes: number }) =&gt; (
+</div>
+<div class="ctx">   &lt;Chip
+</div>
+<div class="ctx">     size="small"
+</div>
+<div class="ctx">     variant="outlined"
+</div>
+<div class="ctx">     label={
+</div>
+<div class="ctx">       &lt;&gt;
+</div>
+<div class="del">-        &lt;strong&gt;{props.crags}&lt;/strong&gt; {t('featurepanel.sectors')},{' '}
+</div>
+<div class="del">-        &lt;strong&gt;{props.routes}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="add">+        &lt;strong&gt;{crags}&lt;/strong&gt; {t('featurepanel.sectors')},{' '}
+</div>
+<div class="add">+        &lt;strong&gt;{routes}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="ctx">       &lt;/&gt;
+</div>
+<div class="ctx">     }
+</div>
+<div class="ctx">     sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+</div>
+<div class="ctx">   /&gt;
+</div>
+<div class="ctx"> );
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const NumberOfHiddenCrags = (props: { count: number }) =&gt; (
+</div>
+<div class="del">-  &lt;ClientOnly&gt;
+</div>
+<div class="del">-    &lt;Typography variant="caption" color="secondary" sx={{ paddingRight: 2 }}&gt;
+</div>
+<div class="del">-      &lt;strong&gt;{props.count}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="del">-    &lt;/Typography&gt;
+</div>
+<div class="del">-  &lt;/ClientOnly&gt;
+</div>
+<div class="add">+const NumberOfHiddenCrags = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="add">+  const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="add">+  const numberOfHiddenCrags = unfilteredCrags.length - crags.length;
+</div>
+<div class="add">+  if (!numberOfHiddenCrags) {
+</div>
+<div class="add">+    return null;
+</div>
+<div class="add">+  }
+</div>
+<div class="add">+
+</div>
+<div class="add">+  return (
+</div>
+<div class="add">+    &lt;ClientOnly&gt;
+</div>
+<div class="add">+      &lt;Typography variant="caption" color="secondary" sx={{ paddingRight: 2 }}&gt;
+</div>
+<div class="add">+        &lt;strong&gt;{numberOfHiddenCrags}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="add">+      &lt;/Typography&gt;
+</div>
+<div class="add">+    &lt;/ClientOnly&gt;
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+};
+</div>
+<div class="add">+
+</div>
+<div class="add">+const AllCragsDistribution = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="add">+  if (crags.length &lt; 2) return null;
+</div>
+<div class="add">+
+</div>
+<div class="add">+  const allCragRoutes = crags.flatMap(({ memberFeatures }) =&gt; memberFeatures);
+</div>
+<div class="add">+  return &lt;RouteDistribution features={allCragRoutes} /&gt;;
+</div>
+<div class="add">+};
+</div>
+<div class="add">+
+</div>
+<div class="add">+const FilterRow = ({ children }: { children: React.ReactNode }) =&gt; (
+</div>
+<div class="add">+  &lt;StyledPaper elevation={0} square&gt;
+</div>
+<div class="add">+    &lt;Stack
+</div>
+<div class="add">+      direction="row"
+</div>
+<div class="add">+      spacing={0.5}
+</div>
+<div class="add">+      justifyContent="flex-end"
+</div>
+<div class="add">+      m={1}
+</div>
+<div class="add">+      alignItems="center"
+</div>
+<div class="add">+    &gt;
+</div>
+<div class="add">+      {children}
+</div>
+<div class="add">+    &lt;/Stack&gt;
+</div>
+<div class="add">+  &lt;/StyledPaper&gt;
+</div>
+<div class="ctx"> );
+</div>
+<div class="ctx"> 
+</div>
+<div class="ctx"> const CragsInAreaInner = () =&gt; {
+</div>
+<div class="hunk">@@ -261,59 +298,25 @@</div>
+<div class="ctx">   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
+</div>
+<div class="ctx">   const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="ctx">   const crags = useGetFilteredCrags(unfilteredCrags).sort(sortByFn(sortBy));
+</div>
+<div class="del">-  const numberOfHiddenCrags = unfilteredCrags.length - crags.length;
+</div>
+<div class="del">-
+</div>
+<div class="del">-  const otherFeatures = feature.memberFeatures.filter(
+</div>
+<div class="del">-    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="del">-  );
+</div>
+<div class="del">-
+</div>
+<div class="del">-  const numberOfRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="del">-    return acc + (memberFeatures?.length ?? 0);
+</div>
+<div class="del">-  }, 0);
+</div>
+<div class="del">-
+</div>
+<div class="del">-  const allCragRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="del">-    return [...acc, ...memberFeatures];
+</div>
+<div class="del">-  }, []);
+</div>
+<div class="del">-
+</div>
+<div class="del">-  return (
+</div>
+<div class="del">-    &lt;&gt;
+</div>
+<div class="del">-      {unfilteredCrags.length &gt; 0 ? (
+</div>
+<div class="del">-        &lt;&gt;
+</div>
+<div class="del">-          &lt;StyledPaper elevation={0} square&gt;
+</div>
+<div class="del">-            &lt;Stack
+</div>
+<div class="del">-              direction="row"
+</div>
+<div class="del">-              spacing={0.5}
+</div>
+<div class="del">-              justifyContent="flex-end"
+</div>
+<div class="del">-              m={1}
+</div>
+<div class="del">-              alignItems="center"
+</div>
+<div class="del">-            &gt;
+</div>
+<div class="del">-              {numberOfHiddenCrags &gt; 0 &amp;&amp; (
+</div>
+<div class="del">-                &lt;NumberOfHiddenCrags count={numberOfHiddenCrags} /&gt;
+</div>
+<div class="del">-              )}
+</div>
+<div class="del">-              &lt;CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} /&gt;
+</div>
+<div class="del">-              &lt;CragsInAreaFilter /&gt;
+</div>
+<div class="del">-            &lt;/Stack&gt;
+</div>
+<div class="del">-          &lt;/StyledPaper&gt;
+</div>
+<div class="del">-          {crags.length &gt; 1 &amp;&amp; &lt;RouteDistribution features={allCragRoutes} /&gt;}
+</div>
+<div class="del">-        &lt;/&gt;
+</div>
+<div class="del">-      ) : null}
+</div>
+<div class="del">-
+</div>
+<div class="del">-      &lt;AreaInfo
+</div>
+<div class="del">-        crags={crags}
+</div>
+<div class="del">-        numberOfRoutes={numberOfRoutes}
+</div>
+<div class="del">-        feature={feature}
+</div>
+<div class="del">-      /&gt;
+</div>
+<div class="del">-
+</div>
+<div class="del">-      &lt;CragList crags={crags} other={otherFeatures} /&gt;
+</div>
+<div class="del">-    &lt;/&gt;
+</div>
+<div class="del">-  );
+</div>
+<div class="del">-};
+</div>
+<div class="del">-
+</div>
+<div class="del">-export const CragsInArea = () =&gt; {
+</div>
+<div class="del">-  const { feature } = useFeatureContext();
+</div>
+<div class="add">+
+</div>
+<div class="ctx">   if (feature.tags.climbing !== 'area' || !feature.memberFeatures?.length) {
+</div>
+<div class="ctx">     return null;
+</div>
+<div class="ctx">   }
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-  return &lt;CragsInAreaInner /&gt;;
+</div>
+<div class="del">-};
+</div>
+<div class="add">+  return (
+</div>
+<div class="add">+    &lt;&gt;
+</div>
+<div class="add">+      {unfilteredCrags.length &gt;= 2 &amp;&amp; (
+</div>
+<div class="add">+        &lt;FilterRow&gt;
+</div>
+<div class="add">+          &lt;NumberOfHiddenCrags crags={crags} /&gt;
+</div>
+<div class="add">+          &lt;CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} /&gt;
+</div>
+<div class="add">+          &lt;CragsInAreaFilter /&gt;
+</div>
+<div class="add">+        &lt;/FilterRow&gt;
+</div>
+<div class="add">+      )}
+</div>
+<div class="add">+      &lt;AllCragsDistribution crags={crags} /&gt;
+</div>
+<div class="add">+      &lt;AreaInfo crags={crags} /&gt;
+</div>
+<div class="add">+      &lt;CragList crags={crags} /&gt;
+</div>
+<div class="add">+    &lt;/&gt;
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+};
+</div>
+<div class="add">+
+</div>
+<div class="add">+export const CragsInArea = () =&gt; &lt;CragsInAreaInner /&gt;;
+</div></pre>
+    </div>
+  </div>
+  <div class="col">
+    <div class="col-title">
+      Výstup subagenta
+      <div class="subtitle">Vstup: BEFORE soubor + český popis refactoringu</div>
+    </div>
+    <div class="diff-content">
+      <pre><div class="file">--- </div>
+<div class="file">+++ </div>
+<div class="hunk">@@ -96,44 +96,66 @@</div>
+<div class="ctx">   }
+</div>
+<div class="ctx"> `;
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const Header = ({
+</div>
+<div class="del">-  label,
+</div>
+<div class="del">-  routesCount,
+</div>
+<div class="del">-}: {
+</div>
+<div class="del">-  label: string;
+</div>
+<div class="del">-  routesCount: number;
+</div>
+<div class="del">-}) =&gt; (
+</div>
+<div class="del">-  &lt;Box ml={2} mr={2}&gt;
+</div>
+<div class="del">-    &lt;CragName&gt;
+</div>
+<div class="del">-      &lt;Typography
+</div>
+<div class="del">-        component="h3"
+</div>
+<div class="del">-        overflow="hidden"
+</div>
+<div class="del">-        textOverflow="ellipsis"
+</div>
+<div class="del">-        fontFamily={isOpenClimbing ? "'Piazzolla', sans-serif" : undefined}
+</div>
+<div class="del">-        fontWeight={900}
+</div>
+<div class="del">-        fontSize={32}
+</div>
+<div class="del">-        lineHeight={1.2}
+</div>
+<div class="del">-        color="primary"
+</div>
+<div class="del">-      &gt;
+</div>
+<div class="del">-        {label}
+</div>
+<div class="del">-      &lt;/Typography&gt;
+</div>
+<div class="del">-      {routesCount &amp;&amp; (
+</div>
+<div class="del">-        &lt;Chip
+</div>
+<div class="del">-          size="small"
+</div>
+<div class="del">-          variant="outlined"
+</div>
+<div class="del">-          label={
+</div>
+<div class="del">-            &lt;&gt;
+</div>
+<div class="del">-              &lt;strong&gt;{routesCount}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="del">-            &lt;/&gt;
+</div>
+<div class="del">-          }
+</div>
+<div class="del">-          sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+</div>
+<div class="del">-        /&gt;
+</div>
+<div class="del">-      )}
+</div>
+<div class="del">-    &lt;/CragName&gt;{' '}
+</div>
+<div class="del">-  &lt;/Box&gt;
+</div>
+<div class="add">+// Rule 4: Extract sticky paper+stack layout container into its own named component.
+</div>
+<div class="add">+const StickyToolbar = ({ children }: { children: React.ReactNode }) =&gt; (
+</div>
+<div class="add">+  &lt;StyledPaper elevation={0} square&gt;
+</div>
+<div class="add">+    &lt;Stack
+</div>
+<div class="add">+      direction="row"
+</div>
+<div class="add">+      spacing={0.5}
+</div>
+<div class="add">+      justifyContent="flex-end"
+</div>
+<div class="add">+      m={1}
+</div>
+<div class="add">+      alignItems="center"
+</div>
+<div class="add">+    &gt;
+</div>
+<div class="add">+      {children}
+</div>
+<div class="add">+    &lt;/Stack&gt;
+</div>
+<div class="add">+  &lt;/StyledPaper&gt;
+</div>
+<div class="ctx"> );
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const AreaInfo = ({ crags, numberOfRoutes, feature }) =&gt; {
+</div>
+<div class="add">+// Rules 1, 5, 6: receives only feature; label and routesCount derived inside.
+</div>
+<div class="add">+const Header = ({ feature }: { feature: Feature }) =&gt; {
+</div>
+<div class="add">+  const label = getLabel(feature);
+</div>
+<div class="add">+  const routesCount = feature.members?.length;
+</div>
+<div class="add">+
+</div>
+<div class="add">+  return (
+</div>
+<div class="add">+    &lt;Box ml={2} mr={2}&gt;
+</div>
+<div class="add">+      &lt;CragName&gt;
+</div>
+<div class="add">+        &lt;Typography
+</div>
+<div class="add">+          component="h3"
+</div>
+<div class="add">+          overflow="hidden"
+</div>
+<div class="add">+          textOverflow="ellipsis"
+</div>
+<div class="add">+          fontFamily={isOpenClimbing ? "'Piazzolla', sans-serif" : undefined}
+</div>
+<div class="add">+          fontWeight={900}
+</div>
+<div class="add">+          fontSize={32}
+</div>
+<div class="add">+          lineHeight={1.2}
+</div>
+<div class="add">+          color="primary"
+</div>
+<div class="add">+        &gt;
+</div>
+<div class="add">+          {label}
+</div>
+<div class="add">+        &lt;/Typography&gt;
+</div>
+<div class="add">+        {routesCount &amp;&amp; (
+</div>
+<div class="add">+          &lt;Chip
+</div>
+<div class="add">+            size="small"
+</div>
+<div class="add">+            variant="outlined"
+</div>
+<div class="add">+            label={
+</div>
+<div class="add">+              &lt;&gt;
+</div>
+<div class="add">+                &lt;strong&gt;{routesCount}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="add">+              &lt;/&gt;
+</div>
+<div class="add">+            }
+</div>
+<div class="add">+            sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+</div>
+<div class="add">+          /&gt;
+</div>
+<div class="add">+        )}
+</div>
+<div class="add">+      &lt;/CragName&gt;{' '}
+</div>
+<div class="add">+    &lt;/Box&gt;
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+};
+</div>
+<div class="add">+
+</div>
+<div class="add">+// Rules 2, 5, 6: feature read from context; crags passed in; numberOfRoutes derived inside.
+</div>
+<div class="add">+const AreaInfo = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="add">+  const { feature } = useFeatureContext();
+</div>
+<div class="add">+  const numberOfRoutes = crags.reduce(
+</div>
+<div class="add">+    (acc, { memberFeatures }) =&gt; acc + (memberFeatures?.length ?? 0),
+</div>
+<div class="add">+    0,
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+
+</div>
+<div class="ctx">   return (
+</div>
+<div class="ctx">     &lt;PanelLabel
+</div>
+<div class="ctx">       addition={
+</div>
+<div class="hunk">@@ -150,7 +172,16 @@</div>
+<div class="ctx">   );
+</div>
+<div class="ctx"> };
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const Gallery = ({ images, feature }) =&gt; {
+</div>
+<div class="add">+// Rules 1, 3, 5, 6: images derived from feature inside; early return for empty images.
+</div>
+<div class="add">+const Gallery = ({ feature }: { feature: Feature }) =&gt; {
+</div>
+<div class="add">+  const images =
+</div>
+<div class="add">+    feature?.imageDefs?.filter(isInstant)?.map((def) =&gt; ({
+</div>
+<div class="add">+      def,
+</div>
+<div class="add">+      image: getInstantImage(def),
+</div>
+<div class="add">+    })) ?? [];
+</div>
+<div class="add">+
+</div>
+<div class="add">+  if (!images.length) return null;
+</div>
+<div class="add">+
+</div>
+<div class="ctx">   const poiType = getHumanPoiType(feature);
+</div>
+<div class="ctx">   const alt = `${poiType} ${getLabel(feature)}`;
+</div>
+<div class="ctx"> 
+</div>
+<div class="hunk">@@ -171,7 +202,13 @@</div>
+<div class="ctx">   );
+</div>
+<div class="ctx"> };
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const CragList = ({ crags, other }) =&gt; {
+</div>
+<div class="add">+// Rules 2, 5, 6: feature read from context to derive other; crags passed in.
+</div>
+<div class="add">+const CragList = ({ crags }: { crags: Feature[] }) =&gt; {
+</div>
+<div class="add">+  const { feature } = useFeatureContext();
+</div>
+<div class="add">+  const other = feature.memberFeatures.filter(
+</div>
+<div class="add">+    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+
+</div>
+<div class="ctx">   return (
+</div>
+<div class="ctx">     &lt;Box mt={2} mb={4}&gt;
+</div>
+<div class="ctx">       &lt;CragListContainer&gt;
+</div>
+<div class="hunk">@@ -196,13 +233,7 @@</div>
+<div class="ctx">   const { setPreview } = useFeatureContext();
+</div>
+<div class="ctx">   const handleHover = () =&gt; feature.center &amp;&amp; setPreview(feature);
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-  const images =
+</div>
+<div class="del">-    feature?.imageDefs?.filter(isInstant)?.map((def) =&gt; ({
+</div>
+<div class="del">-      def,
+</div>
+<div class="del">-      image: getInstantImage(def),
+</div>
+<div class="del">-    })) ?? [];
+</div>
+<div class="del">-
+</div>
+<div class="del">-  const getOnClickWithHash = (e) =&gt; {
+</div>
+<div class="add">+  const getOnClickWithHash = (e: React.MouseEvent) =&gt; {
+</div>
+<div class="ctx">     e.preventDefault();
+</div>
+<div class="ctx">     Router.push(`/${getUrlOsmId(feature.osmMeta)}${window.location.hash}`);
+</div>
+<div class="ctx">   };
+</div>
+<div class="hunk">@@ -218,11 +249,8 @@</div>
+<div class="ctx">         title={`${t('featurepanel.sector')} ${getLabel(feature)}`}
+</div>
+<div class="ctx">       &gt;
+</div>
+<div class="ctx">         &lt;InnerContainer&gt;
+</div>
+<div class="del">-          &lt;Header
+</div>
+<div class="del">-            label={getLabel(feature)}
+</div>
+<div class="del">-            routesCount={feature.members?.length}
+</div>
+<div class="del">-          /&gt;
+</div>
+<div class="del">-          {images.length ? &lt;Gallery feature={feature} images={images} /&gt; : null}
+</div>
+<div class="add">+          &lt;Header feature={feature} /&gt;
+</div>
+<div class="add">+          &lt;Gallery feature={feature} /&gt;
+</div>
+<div class="ctx">         &lt;/InnerContainer&gt;
+</div>
+<div class="ctx">       &lt;/StyledLink&gt;
+</div>
+<div class="ctx">       {feature.memberFeatures.length &gt; 0 &amp;&amp; (
+</div>
+<div class="hunk">@@ -234,77 +262,67 @@</div>
+<div class="ctx">   );
+</div>
+<div class="ctx"> };
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const NumberOfVisible = (props: { crags: any; routes: any }) =&gt; (
+</div>
+<div class="add">+const NumberOfVisible = ({ crags, routes }: { crags: number; routes: number }) =&gt; (
+</div>
+<div class="ctx">   &lt;Chip
+</div>
+<div class="ctx">     size="small"
+</div>
+<div class="ctx">     variant="outlined"
+</div>
+<div class="ctx">     label={
+</div>
+<div class="ctx">       &lt;&gt;
+</div>
+<div class="del">-        &lt;strong&gt;{props.crags}&lt;/strong&gt; {t('featurepanel.sectors')},{' '}
+</div>
+<div class="del">-        &lt;strong&gt;{props.routes}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="add">+        &lt;strong&gt;{crags}&lt;/strong&gt; {t('featurepanel.sectors')},{' '}
+</div>
+<div class="add">+        &lt;strong&gt;{routes}&lt;/strong&gt; {t('featurepanel.routes')}
+</div>
+<div class="ctx">       &lt;/&gt;
+</div>
+<div class="ctx">     }
+</div>
+<div class="ctx">     sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+</div>
+<div class="ctx">   /&gt;
+</div>
+<div class="ctx"> );
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const NumberOfHiddenCrags = (props: { count: number }) =&gt; (
+</div>
+<div class="add">+const NumberOfHiddenCrags = ({ count }: { count: number }) =&gt; (
+</div>
+<div class="ctx">   &lt;ClientOnly&gt;
+</div>
+<div class="ctx">     &lt;Typography variant="caption" color="secondary" sx={{ paddingRight: 2 }}&gt;
+</div>
+<div class="del">-      &lt;strong&gt;{props.count}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="add">+      &lt;strong&gt;{count}&lt;/strong&gt; {t('featurepanel.hidden_crags')}
+</div>
+<div class="ctx">     &lt;/Typography&gt;
+</div>
+<div class="ctx">   &lt;/ClientOnly&gt;
+</div>
+<div class="ctx"> );
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-const CragsInAreaInner = () =&gt; {
+</div>
+<div class="del">-  const { feature } = useFeatureContext();
+</div>
+<div class="add">+// Rules 2, 3, 4: reads context/hooks itself; early return when no crags;
+</div>
+<div class="add">+// uses StickyToolbar for the paper+stack layout.
+</div>
+<div class="add">+const CragsControls = () =&gt; {
+</div>
+<div class="ctx">   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
+</div>
+<div class="ctx">   const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="ctx">   const crags = useGetFilteredCrags(unfilteredCrags).sort(sortByFn(sortBy));
+</div>
+<div class="ctx">   const numberOfHiddenCrags = unfilteredCrags.length - crags.length;
+</div>
+<div class="ctx"> 
+</div>
+<div class="del">-  const otherFeatures = feature.memberFeatures.filter(
+</div>
+<div class="del">-    ({ tags }) =&gt; tags.climbing !== 'crag',
+</div>
+<div class="del">-  );
+</div>
+<div class="del">-
+</div>
+<div class="del">-  const numberOfRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="del">-    return acc + (memberFeatures?.length ?? 0);
+</div>
+<div class="del">-  }, 0);
+</div>
+<div class="del">-
+</div>
+<div class="del">-  const allCragRoutes = crags.reduce((acc, { memberFeatures }) =&gt; {
+</div>
+<div class="del">-    return [...acc, ...memberFeatures];
+</div>
+<div class="del">-  }, []);
+</div>
+<div class="add">+  if (!unfilteredCrags.length) return null;
+</div>
+<div class="add">+
+</div>
+<div class="add">+  const allCragRoutes = crags.reduce&lt;Feature[]&gt;(
+</div>
+<div class="add">+    (acc, { memberFeatures }) =&gt; [...acc, ...memberFeatures],
+</div>
+<div class="add">+    [],
+</div>
+<div class="add">+  );
+</div>
+<div class="ctx"> 
+</div>
+<div class="ctx">   return (
+</div>
+<div class="ctx">     &lt;&gt;
+</div>
+<div class="del">-      {unfilteredCrags.length &gt; 0 ? (
+</div>
+<div class="del">-        &lt;&gt;
+</div>
+<div class="del">-          &lt;StyledPaper elevation={0} square&gt;
+</div>
+<div class="del">-            &lt;Stack
+</div>
+<div class="del">-              direction="row"
+</div>
+<div class="del">-              spacing={0.5}
+</div>
+<div class="del">-              justifyContent="flex-end"
+</div>
+<div class="del">-              m={1}
+</div>
+<div class="del">-              alignItems="center"
+</div>
+<div class="del">-            &gt;
+</div>
+<div class="del">-              {numberOfHiddenCrags &gt; 0 &amp;&amp; (
+</div>
+<div class="del">-                &lt;NumberOfHiddenCrags count={numberOfHiddenCrags} /&gt;
+</div>
+<div class="del">-              )}
+</div>
+<div class="del">-              &lt;CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} /&gt;
+</div>
+<div class="del">-              &lt;CragsInAreaFilter /&gt;
+</div>
+<div class="del">-            &lt;/Stack&gt;
+</div>
+<div class="del">-          &lt;/StyledPaper&gt;
+</div>
+<div class="del">-          {crags.length &gt; 1 &amp;&amp; &lt;RouteDistribution features={allCragRoutes} /&gt;}
+</div>
+<div class="del">-        &lt;/&gt;
+</div>
+<div class="del">-      ) : null}
+</div>
+<div class="del">-
+</div>
+<div class="del">-      &lt;AreaInfo
+</div>
+<div class="del">-        crags={crags}
+</div>
+<div class="del">-        numberOfRoutes={numberOfRoutes}
+</div>
+<div class="del">-        feature={feature}
+</div>
+<div class="del">-      /&gt;
+</div>
+<div class="del">-
+</div>
+<div class="del">-      &lt;CragList crags={crags} other={otherFeatures} /&gt;
+</div>
+<div class="add">+      &lt;StickyToolbar&gt;
+</div>
+<div class="add">+        {numberOfHiddenCrags &gt; 0 &amp;&amp; (
+</div>
+<div class="add">+          &lt;NumberOfHiddenCrags count={numberOfHiddenCrags} /&gt;
+</div>
+<div class="add">+        )}
+</div>
+<div class="add">+        &lt;CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} /&gt;
+</div>
+<div class="add">+        &lt;CragsInAreaFilter /&gt;
+</div>
+<div class="add">+      &lt;/StickyToolbar&gt;
+</div>
+<div class="add">+      {crags.length &gt; 1 &amp;&amp; &lt;RouteDistribution features={allCragRoutes} /&gt;}
+</div>
+<div class="add">+    &lt;/&gt;
+</div>
+<div class="add">+  );
+</div>
+<div class="add">+};
+</div>
+<div class="add">+
+</div>
+<div class="add">+const CragsInAreaInner = () =&gt; {
+</div>
+<div class="add">+  const { sortByFn, sortBy } = useCragsInAreaSort();
+</div>
+<div class="add">+  const unfilteredCrags = useGetMemberCrags();
+</div>
+<div class="add">+  const crags = useGetFilteredCrags(unfilteredCrags).sort(sortByFn(sortBy));
+</div>
+<div class="add">+
+</div>
+<div class="add">+  return (
+</div>
+<div class="add">+    &lt;&gt;
+</div>
+<div class="add">+      &lt;CragsControls /&gt;
+</div>
+<div class="add">+      &lt;AreaInfo crags={crags} /&gt;
+</div>
+<div class="add">+      &lt;CragList crags={crags} /&gt;
+</div>
+<div class="ctx">     &lt;/&gt;
+</div>
+<div class="ctx">   );
+</div>
+<div class="ctx"> };
+</div></pre>
+    </div>
+  </div>
+</div>
+<div class="summary">
+  <h3>📊 Porovnání přístupů</h3>
+  <table class="compare-table">
+    <tr>
+      <th>Aspekt</th>
+      <th>Originální commit</th>
+      <th>Subagent</th>
+    </tr>
+    <tr>
+      <td>AreaInfo – přesun numberOfRoutes dovnitř</td>
+      <td class="badge-same">✅ Ano</td>
+      <td class="badge-same">✅ Ano</td>
+    </tr>
+    <tr>
+      <td>AreaInfo – přesun feature z contextu dovnitř</td>
+      <td class="badge-same">✅ Ano</td>
+      <td class="badge-same">✅ Ano</td>
+    </tr>
+    <tr>
+      <td>CragList – přesun otherFeatures dovnitř</td>
+      <td class="badge-same">✅ Ano</td>
+      <td class="badge-same">✅ Ano</td>
+    </tr>
+    <tr>
+      <td>NumberOfHiddenCrags – early return null</td>
+      <td class="badge-same">✅ Ano (přijímá crags[])</td>
+      <td class="badge-diff">⚠️ Jinak (přijímá count, podmínka v CragsControls)</td>
+    </tr>
+    <tr>
+      <td>AllCragsDistribution / RouteDistribution – early return</td>
+      <td class="badge-same">✅ AllCragsDistribution component</td>
+      <td class="badge-diff">⚠️ Zůstalo inline v CragsControls</td>
+    </tr>
+    <tr>
+      <td>Extrakce layoutu do komponenty</td>
+      <td class="badge-same">✅ FilterRow</td>
+      <td class="badge-same">✅ StickyToolbar (jiný název)</td>
+    </tr>
+    <tr>
+      <td>Header – refactoring</td>
+      <td class="badge-diff">❌ Nezměněn (přijímá label, routesCount)</td>
+      <td class="badge-extra">🔵 Navíc: přijímá Feature, derivuje uvnitř</td>
+    </tr>
+    <tr>
+      <td>Gallery – refactoring</td>
+      <td class="badge-diff">❌ Nezměněna (přijímá images+feature)</td>
+      <td class="badge-extra">🔵 Navíc: přijímá jen Feature, images uvnitř + early return</td>
+    </tr>
+    <tr>
+      <td>Extrakce CragsControls / FilterRow bloku</td>
+      <td class="badge-diff">⚠️ Zůstalo inline v CragsInAreaInner</td>
+      <td class="badge-extra">🔵 Navíc: CragsControls jako samostatná komponenta</td>
+    </tr>
+    <tr>
+      <td>TypeScript typy</td>
+      <td class="badge-same">✅ Ano (crags: Feature[])</td>
+      <td class="badge-same">✅ Ano (+ navíc number místo any)</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
