@@ -8,6 +8,12 @@ const WIKI_USER_URL = 'https://meta.wikimedia.org/w/rest.php/oauth2/resource/pro
 const STORAGE_KEY = 'wikimedia_access_token';
 const STORAGE_USER_KEY = 'wikimedia_user';
 
+declare global {
+  interface Window {
+    wikimediaAuthComplete?: (callbackUrl: string) => void;
+  }
+}
+
 export type WikimediaUser = {
   name: string;
 };
@@ -105,8 +111,9 @@ export const useWikimediaAuth = () => {
       );
 
       const code = await new Promise<string>((resolve, reject) => {
-        (window as any).wikimediaAuthComplete = (callbackUrl: string) => {
-          delete (window as any).wikimediaAuthComplete;
+        window.wikimediaAuthComplete = (callbackUrl: string) => {
+          clearInterval(checkClosed);
+          delete window.wikimediaAuthComplete;
           const url = new URL(callbackUrl);
           const code = url.searchParams.get('code');
           const error = url.searchParams.get('error');
@@ -122,8 +129,8 @@ export const useWikimediaAuth = () => {
         const checkClosed = setInterval(() => {
           if (popup?.closed) {
             clearInterval(checkClosed);
-            if ((window as any).wikimediaAuthComplete) {
-              delete (window as any).wikimediaAuthComplete;
+            if (window.wikimediaAuthComplete) {
+              delete window.wikimediaAuthComplete;
               reject(new Error('Popup closed'));
             }
           }

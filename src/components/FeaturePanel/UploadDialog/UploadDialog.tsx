@@ -229,7 +229,10 @@ const SuccessContent = ({ result }: { result: UploadResult }) => (
             src={`https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(result.filename)}?width=120`}
             alt={result.filename}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              (e.target as HTMLImageElement).insertAdjacentHTML('afterend', '<span aria-hidden="true" style="font-size:2rem">🖼</span>');
+            }}
           />
         </Link>
       </Box>

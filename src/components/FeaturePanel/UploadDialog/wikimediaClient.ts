@@ -46,10 +46,9 @@ export const getWikimediaClient = (token: string) => {
 
   const upload = async (file: File, filename: string, text: string) => {
     const token = await getCsrfToken();
-    const blob = new Blob([file], { type: file.type || 'application/octet-stream' });
 
     const data = await UPLOAD('upload', {
-      file: blob,
+      file,
       filename,
       text,
       comment: 'Initial upload from OsmAPP.org',
