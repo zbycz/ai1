@@ -576,4 +576,25 @@ export default {
 
   yes: 'Yes',
   no: 'No',
+
+  'uploaddialog.open_button': 'Upload image',
+  'uploaddialog.dialog_title': 'Add image',
+  'uploaddialog.upload_own_image': 'UPLOAD YOUR OWN IMAGE',
+  'uploaddialog.login_required_text':
+    'To upload your own image, please log in or register to',
+  'uploaddialog.login_button': 'LOG IN',
+  'uploaddialog.register_button': 'REGISTER',
+  'uploaddialog.image_will_be_uploaded': 'The image will be uploaded to',
+  'uploaddialog.image_license_info': 'and shared under the free license',
+  'uploaddialog.allowed_own_photos': 'your own photos or images',
+  'uploaddialog.disallowed_copyrighted': 'material protected by copyright',
+  'uploaddialog.upload_button': 'UPLOAD IMAGE',
+  'uploaddialog.logged_in_as': 'Logged in as',
+  'uploaddialog.logout_link': 'log out',
+  'uploaddialog.success_title': 'Image uploaded successfully',
+  'uploaddialog.success_subtitle': 'Thank you for contributing to Wikimedia Commons.',
+  'uploaddialog.result_name': 'NAME',
+  'uploaddialog.result_license': 'LICENSE',
+  'uploaddialog.result_location': 'LOCATION',
+  'uploaddialog.result_author': 'AUTHOR',
 };
