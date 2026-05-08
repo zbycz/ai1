@@ -56,7 +56,7 @@ export const LoginScreen = () => {
           <Typography variant="body2" color="text.secondary" paragraph>
             {t('upload.login_description')}{' '}
             <a
-              href="https://www.mediawiki.org/wiki/Special:CreateAccount"
+              href="https://commons.wikimedia.org/wiki/Special:CreateAccount"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -109,7 +109,7 @@ export const LoginScreen = () => {
         <Button
           size="small"
           color="primary"
-          href="https://www.mediawiki.org/wiki/Special:CreateAccount"
+          href="https://commons.wikimedia.org/wiki/Special:CreateAccount"
           target="_blank"
           rel="noopener noreferrer"
         >

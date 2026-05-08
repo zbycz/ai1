@@ -91,7 +91,7 @@ const LicenseInfo = () => (
       </Link>{' '}
       {t('upload.description_license')}{' '}
       <Link href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">
-        CC-BY-4.0
+        CC-BY-SA-4.0
       </Link>
     </Typography>
     <Box display="flex" flexDirection="column" gap={1} mt={2}>

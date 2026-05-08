@@ -6,11 +6,13 @@ import { getPageId } from './mediawiki/getPageId';
 import { claimsHelpers } from './mediawiki/claimsHelpers';
 import { isTitleAvailable } from './mediawiki/isTitleAvailable';
 
+const MAX_SUFFIX_ATTEMPTS = 20;
+
 const findFreeSuffix = async (
   feature: Feature,
   file: UploadFileInfo,
 ): Promise<string> => {
-  for (let i = 1; i < 20; i++) {
+  for (let i = 1; i < MAX_SUFFIX_ATTEMPTS; i++) {
     const suffix = i === 1 ? '' : ` (${i})`;
     const filename = getFilename(feature, file, suffix);
     const isFree = await isTitleAvailable(`File:${filename}`);
@@ -18,7 +20,7 @@ const findFreeSuffix = async (
       return suffix;
     }
   }
-  throw new Error(`Could not find 20 free suffixes for ${file.filename}`);
+  throw new Error(`Could not find ${MAX_SUFFIX_ATTEMPTS} free suffixes for ${file.filename}`);
 };
 
 export const uploadToWikimediaCommons = async (

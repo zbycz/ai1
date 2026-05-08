@@ -107,7 +107,7 @@ export const SuccessScreen = ({ result }: Props) => {
             {t('upload.field_license')}
           </Typography>
           <Typography variant="body2" gutterBottom>
-            CC-BY-4.0
+            CC-BY-SA-4.0
           </Typography>
 
           {locationStr && (
