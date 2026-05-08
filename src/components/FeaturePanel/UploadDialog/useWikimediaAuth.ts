@@ -41,7 +41,7 @@ const generateCodeChallenge = async (verifier: string) => {
 };
 
 const getCallbackUrl = () =>
-  `${window.location.origin}/wikimedia-oauth-token.html`;
+  'https://osmapp.org/wikimedia-oauth-callback.html' //`${window.location.origin}/wikimedia-oauth-token.html`;
 
 const exchangeCodeForToken = async (
   code: string,
