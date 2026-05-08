@@ -19,6 +19,7 @@ import {
   View,
 } from '../src/components/utils/MapStateContext';
 import { OsmAuthProvider } from '../src/components/utils/OsmAuthContext';
+import { WikimediaAuthProvider } from '../src/components/utils/WikimediaAuthContext';
 import { EditDialogProvider } from '../src/components/FeaturePanel/helpers/EditDialogContext';
 import Map from '../src/components/Map/Map';
 import { TitleAndMetaTags } from '../src/helpers/TitleAndMetaTags';
@@ -106,6 +107,7 @@ const MyApp = (props: Props) => {
               >
                 <MapStateProvider initialMapView={mapView}>
                   <OsmAuthProvider cookies={cookies}>
+                    <WikimediaAuthProvider>
                     <StarsProvider>
                       <EditDialogProvider /* TODO supply router.query */>
                         <QueryClientProvider client={reactQueryClient}>
@@ -130,6 +132,7 @@ const MyApp = (props: Props) => {
                         </QueryClientProvider>
                       </EditDialogProvider>
                     </StarsProvider>
+                    </WikimediaAuthProvider>
                   </OsmAuthProvider>
                 </MapStateProvider>
               </FeatureProvider>

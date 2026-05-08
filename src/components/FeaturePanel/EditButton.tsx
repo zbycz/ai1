@@ -7,6 +7,7 @@ import { useOsmAuthContext } from '../utils/OsmAuthContext';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { useEditDialogFeature } from './EditDialog/utils';
 import CommentIcon from '@mui/icons-material/Comment';
+import { useUploadDialogContext } from './UploadDialog';
 
 const getLabel = (
   loggedIn: boolean,
@@ -23,6 +24,7 @@ export const EditButton = () => {
   const { isAddPlace, isUndelete } = useEditDialogFeature();
   const { loggedIn } = useOsmAuthContext();
   const { open } = useEditDialogContext();
+  const { openDialog } = useUploadDialogContext();
 
   return (
     <Box mt={3} mb={3} mx="auto" sx={{ textAlign: 'center' }}>
@@ -43,6 +45,18 @@ export const EditButton = () => {
       >
         {getLabel(loggedIn, isAddPlace, isUndelete)}
       </Button>
+      {!isAddPlace && !isUndelete && (
+        <Box mt={1}>
+          <Button
+            size="small"
+            color="secondary"
+            onClick={openDialog}
+            sx={{ textTransform: 'none', color: 'text.secondary' }}
+          >
+            {t('upload.upload_image_button')}
+          </Button>
+        </Box>
+      )}
     </Box>
   );
 };

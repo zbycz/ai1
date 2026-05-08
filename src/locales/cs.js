@@ -519,4 +519,28 @@ export default {
 
   yes: 'Ano',
   no: 'Ne',
+
+  'upload.upload_image_button': 'Nahrát obrázek',
+  'upload.dialog_title': 'Přidat obrázek',
+  'upload.title': 'NAHRÁT VLASTNÍ OBRÁZEK',
+  'upload.login_description':
+    'Pro nahrání vlastního obrázku se, prosím, přihlaste či registrujte do projektu',
+  'upload.login_username': 'Uživatelské jméno Wikimedia',
+  'upload.login_password': 'Heslo',
+  'upload.login_fill_credentials': 'Vyplňte prosím uživatelské jméno a heslo',
+  'upload.login_button': 'PŘIHLÁSIT SE',
+  'upload.register_button': 'REGISTROVAT',
+  'upload.description_prefix': 'Obrázek bude nahrán na',
+  'upload.description_license': 'a bude šířen pod svobodnou licencí',
+  'upload.allowed_own_photos': 'vlastní fotografie nebo obrázky',
+  'upload.disallowed_copyrighted': 'materiál chráněn autorským zákonem',
+  'upload.upload_button': 'NAHRÁT OBRÁZEK',
+  'upload.logged_in_as': 'Přihlášený uživatel',
+  'upload.logout': 'odhlásit',
+  'upload.success_heading': 'Obrázek úspěšně nahrán',
+  'upload.success_description': 'Děkujeme, že přispíváte do projektu Wikimedia Commons.',
+  'upload.field_name': 'NÁZEV',
+  'upload.field_license': 'LICENCE',
+  'upload.field_location': 'POLOHA',
+  'upload.field_author': 'AUTOR',
 };

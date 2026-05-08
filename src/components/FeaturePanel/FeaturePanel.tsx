@@ -18,6 +18,10 @@ import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
 import { Runways } from './Runways/Runways';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
+import {
+  UploadDialog,
+  UploadDialogProvider,
+} from './UploadDialog';
 import { RouteDistributionInFeaturePanel } from './Climbing/RouteDistribution';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
@@ -85,29 +89,32 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
 
         <Flex>
           {!skeleton && (
-            <>
-              <CragsInArea />
+            <UploadDialogProvider>
+              <>
+                <CragsInArea />
 
-              <Box mb={2}>
-                <FeatureImages />
-              </Box>
+                <Box mb={2}>
+                  <FeatureImages />
+                </Box>
 
-              <PanelSidePadding>
-                {!movePropertiesBelowMembers && <PropertiesComponent />}
-              </PanelSidePadding>
-              <RouteDistributionInFeaturePanel />
-              <PanelSidePadding>
-                {!isPublictransportRoute(feature) && <MemberFeatures />}
-                {advanced && <Members />}
-                {movePropertiesBelowMembers && <PropertiesComponent />}
-                <PublicTransport />
-                <Runways />
-                <Sockets />
-                <FeatureOpenPlaceGuideLink />
-                <EditButton />
-                <EditDialog />
-              </PanelSidePadding>
-            </>
+                <PanelSidePadding>
+                  {!movePropertiesBelowMembers && <PropertiesComponent />}
+                </PanelSidePadding>
+                <RouteDistributionInFeaturePanel />
+                <PanelSidePadding>
+                  {!isPublictransportRoute(feature) && <MemberFeatures />}
+                  {advanced && <Members />}
+                  {movePropertiesBelowMembers && <PropertiesComponent />}
+                  <PublicTransport />
+                  <Runways />
+                  <Sockets />
+                  <FeatureOpenPlaceGuideLink />
+                  <EditButton />
+                  <EditDialog />
+                  <UploadDialog />
+                </PanelSidePadding>
+              </>
+            </UploadDialogProvider>
           )}
         </Flex>
 
