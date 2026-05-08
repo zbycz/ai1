@@ -26,9 +26,9 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { t } from '../../../services/intl';
 
 const WIKIMEDIA_LOGO =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/48px-Commons-logo.svg.png';
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Commons-logo.svg/120px-Commons-logo.svg.png';
 const WIKIPEDIA_LOGO =
-  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wikipedia-logo-v2.svg/48px-Wikipedia-logo-v2.svg.png';
+  'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Wikipedia-logo-v2.svg/120px-Wikipedia-logo-v2.svg.png';
 const REGISTER_URL = 'https://www.mediawiki.org/wiki/Special:CreateAccount';
 const COMMONS_URL = 'https://commons.wikimedia.org';
 const CC_BY_URL = 'https://creativecommons.org/licenses/by/4.0/';
